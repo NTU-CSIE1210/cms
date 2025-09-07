@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 # Programming contest management system
 # Copyright © 2017 Kiarash Golezardi <kiarashgolezardi@gmail.com>
@@ -18,14 +19,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+from future.builtins.disabled import *  # noqa
+from future.builtins import *  # noqa
+
+import io
 import json
 import logging
 import os
 import re
 import subprocess
+
 from datetime import timedelta
 
 from cms.db import Task, Dataset, Manager, Testcase, Attachment, Statement
+
 from .base_loader import TaskLoader
 
 
@@ -38,7 +49,6 @@ def make_timedelta(t):
 
 class TpsTaskLoader(TaskLoader):
     """Loader for TPS exported tasks.
-
     """
 
     short_name = 'tps_task'
@@ -47,20 +57,18 @@ class TpsTaskLoader(TaskLoader):
     @staticmethod
     def detect(path):
         """See docstring in class Loader.
-
         """
         return os.path.exists(os.path.join(path, "problem.json"))
 
     def task_has_changed(self):
         """See docstring in class Loader.
-
         """
         return True
 
     def _get_task_type_parameters(self, data, task_type, evaluation_param):
-        parameters_str = data['task_type_params']
+        parameters_str = data['task_type_params'] if 'task_type_params' in data else None
         if parameters_str is None or parameters_str == '':
-            parameters_str = '{}'
+            parameters_str = '{"task_type_parameters_Batch_compilation": "alone"}'
         task_type_parameters = json.loads(parameters_str)
         par_prefix = 'task_type_parameters_%s' % task_type
 
@@ -77,7 +85,7 @@ class TpsTaskLoader(TaskLoader):
                 task_type_parameters[par_output] = ''
             if par_user_managers not in task_type_parameters:
                 pas_grader = os.path.join(
-                    self.path, 'graders', 'graderlib.pas')
+                    self.path, 'grader', 'graderlib.pas')
                 user_managers = ('['
                                  + '\\"grader.cpp\\"' + ', '
                                  + '\\"grader.java\\"' + ', '
@@ -106,14 +114,13 @@ class TpsTaskLoader(TaskLoader):
 
     def get_task(self, get_statement=True):
         """See docstring in class Loader.
-
         """
 
         json_src = os.path.join(self.path, 'problem.json')
         if not os.path.exists(json_src):
             logger.critical('No task found.')
-            raise OSError('No task found at path %s' % json_src)
-        with open(json_src, 'rt', encoding='utf-8') as json_file:
+            raise IOError('No task found at path %s' % json_src)
+        with io.open(json_src, 'rt', encoding='utf-8') as json_file:
             data = json.load(json_file)
 
         name = data['code']
@@ -122,11 +129,14 @@ class TpsTaskLoader(TaskLoader):
         args = {}
 
         args["name"] = name
-        args["title"] = data['name']
+        if 'problem_label' in data:
+            args['title'] = '{}. {}'.format(data['problem_label'], data['title'])
+        else:
+            args['title'] = data['title']
 
         # Statements
         if get_statement:
-            statements_dir = os.path.join(self.path, 'statements')
+            statements_dir = os.path.join(self.path, 'statement')
             if os.path.exists(statements_dir):
                 statements = [
                     filename
@@ -146,18 +156,27 @@ class TpsTaskLoader(TaskLoader):
                     args['statements'][language] = Statement(language, digest)
 
         # Attachments
-        args["attachments"] = dict()
-        attachments_dir = os.path.join(self.path, 'attachments')
-        if os.path.exists(attachments_dir):
-            logger.info("Attachments found")
-            for filename in os.listdir(attachments_dir):
+        if get_statement:
+            args["attachments"] = dict()
+            attachments_path = os.path.join(self.path, name + '.zip')
+            if os.path.exists(attachments_path):
+                logger.info("Attachments found")
+                filename = os.path.basename(attachments_path)
                 digest = self.file_cacher.put_file_from_path(
-                    os.path.join(attachments_dir, filename),
+                    attachments_path,
                     "Attachment %s for task %s" % (filename, name))
                 args["attachments"][filename] = Attachment(filename, digest)
 
-        data["task_type"] = \
-            data["task_type"][0].upper() + data["task_type"][1:]
+                '''
+                for filename in os.listdir(attachments_dir):
+                    digest = self.file_cacher.put_file_from_path(
+                        os.path.join(attachments_dir, filename),
+                        "Attachment %s for task %s" % (filename, name))
+                    args["attachments"][filename] = Attachment(filename, digest)
+                '''
+
+        data["type"] = \
+            data["type"][0].upper() + data["type"][1:]
 
         # Setting the submission format
         # Obtaining testcases' codename
@@ -170,22 +189,24 @@ class TpsTaskLoader(TaskLoader):
                 filename[:-3]
                 for filename in os.listdir(testcases_dir)
                 if filename[-3:] == '.in'])
-        if data["task_type"] == 'OutputOnly':
+        if data["type"] == 'OutputOnly':
             args["submission_format"] = list()
             for codename in testcase_codenames:
-                args["submission_format"].append("%s.out" % codename)
-        elif data["task_type"] == 'Notice':
+                args["submission_format"].append("output_%s.txt" % codename)
+        elif data["type"] == 'Notice':
             args["submission_format"] = list()
         else:
             args["submission_format"] = ["%s.%%l" % name]
 
-        # These options cannot be configured in the TPS format.
-        # Uncomment the following to set specific values for them.
+        # Task information
+        if 'feedback_level' in data:
+            args['feedback_level'] = data['feedback_level']
 
+        # Tokens parameters
         # args['max_user_test_number'] = 10
         # args['min_user_test_interval'] = make_timedelta(60)
 
-        # args['token_mode'] = 'infinite'
+        args['token_mode'] = 'disabled'
         # args['token_max_number'] = 100
         # args['token_min_interval'] = make_timedelta(60)
         # args['token_gen_initial'] = 1
@@ -193,20 +214,41 @@ class TpsTaskLoader(TaskLoader):
         # args['token_gen_interval'] = make_timedelta(1800)
         # args['token_gen_max'] = 2
 
-        if "score_precision" in data:
-            args['score_precision'] = int(data["score_precision"])
+        # Limits
+        if 'max_submission_number' in data:
+            args['max_submission_number'] = data['max_submission_number']
+        if 'max_user_test_number' in data:
+            args['max_user_test_number'] = data['max_user_test_number']
+        if 'min_submission_interval' in data:
+            if data['min_submission_interval'] is None:
+                args['min_submission_interval'] = None
+            else:
+                args['min_submission_interval'] = make_timedelta(data['min_submission_interval'])
+        if 'min_user_test_interval' in data:
+            if data['min_user_test_interval'] is None:
+                args['min_user_test_interval'] = None
+            else:
+                args['min_user_test_interval'] = make_timedelta(data['min_user_test_interval'])
+
+        # Score options
+        if 'score_precision' in data:
+            args['score_precision'] = int(data['score_precision'])
         else:
             args['score_precision'] = 2
-        args['max_submission_number'] = 50
-        args['max_user_test_number'] = 50
-        if data["task_type"] == 'OutputOnly':
-            args['max_submission_number'] = 100
-            args['max_user_test_number'] = 100
-
-        args['min_submission_interval'] = make_timedelta(60)
-        args['min_user_test_interval'] = make_timedelta(60)
+        if 'score_mode' in data:
+            args['score_mode'] = data['score_mode']
+        else:
+            args['score_mode'] = 'max_tokened_last'
 
         task = Task(**args)
+
+        ignore_datasets = data['ignore_datasets'] if 'ignore_datasets' in data else False
+
+        if ignore_datasets:
+            logger.info("Task parameters loaded.")
+            logger.info("Dataset loading skipped.")
+
+            return task
 
         args = dict()
 
@@ -214,10 +256,10 @@ class TpsTaskLoader(TaskLoader):
         args["description"] = "Default"
         args["autojudge"] = True
 
-        if data['task_type'] != 'OutputOnly' \
-                and data['task_type'] != 'Notice':
+        if data['type'] != 'OutputOnly' \
+                and data['type'] != 'Notice':
             args["time_limit"] = float(data['time_limit'])
-            args["memory_limit"] = int(data['memory_limit'])
+            args["memory_limit"] = int(data['memory_limit']) * 1024 * 1024
 
         args["managers"] = {}
 
@@ -225,16 +267,18 @@ class TpsTaskLoader(TaskLoader):
         checker_dir = os.path.join(self.path, "checker")
         checker_src = os.path.join(checker_dir, "checker.cpp")
 
-        if os.path.exists(checker_src):
+        ignore_checker = data['ignore_checker'] if 'ignore_checker' in data else False
+
+        if ignore_checker:
+            logger.info("Checker is ignored, using diff if necessary")
+            evaluation_param = "diff"
+        elif os.path.exists(checker_src):
             logger.info("Checker found, compiling")
             checker_exe = os.path.join(checker_dir, "checker")
-            ret = subprocess.call([
-                "g++", "-x", "c++", "-std=gnu++14", "-O2", "-static",
+            subprocess.call([
+                "g++", "-x", "c++", "-std=gnu++20", "-O2", "-static", "-DCMS",
                 "-o", checker_exe, checker_src
             ])
-            if ret != 0:
-                logger.critical("Could not compile checker")
-                return None
             digest = self.file_cacher.put_file_from_path(
                 checker_exe,
                 "Manager for task %s" % name)
@@ -246,15 +290,15 @@ class TpsTaskLoader(TaskLoader):
 
         # Note that the original TPS worked with custom task type Batch2017
         # and Communication2017 instead of Batch and Communication.
-        args["task_type"] = data['task_type']
+        args["task_type"] = data['type']
         args["task_type_parameters"] = \
             self._get_task_type_parameters(
-                data, data['task_type'], evaluation_param)
+                data, data['type'], evaluation_param)
 
         # Graders
-        graders_dir = os.path.join(self.path, 'graders')
+        graders_dir = os.path.join(self.path, 'grader')
 
-        if data['task_type'] == 'TwoSteps':
+        if data['type'] == 'TwoSteps':
             pas_manager = name + 'lib.pas'
             pas_manager_path = os.path.join(graders_dir, pas_manager)
             if not os.path.exists(pas_manager_path):
@@ -262,20 +306,28 @@ class TpsTaskLoader(TaskLoader):
                     ''.encode('utf-8'), 'Pascal manager for task %s' % name)
                 args["managers"][pas_manager] = Manager(pas_manager, digest)
 
+        def get_file_list(files_dir, prefix, except_files):
+            rt = []
+            for filename in os.listdir(files_dir):
+                if not filename in except_files:
+                    if os.path.isdir(os.path.join(files_dir, filename)):
+                        rt += get_file_list(os.path.join(files_dir, filename), os.path.join(prefix, filename), except_files)
+                    else:
+                        rt.append(os.path.join(prefix, filename))
+            return rt
+
         if not os.path.exists(graders_dir):
             logger.warning('Grader folder was not found')
             graders_list = []
         else:
-            graders_list = \
-                [filename
-                 for filename in os.listdir(graders_dir)
-                 if filename != 'manager.cpp']
+            graders_list = get_file_list(graders_dir, '', {'manager.cpp'})
         for grader_name in graders_list:
             grader_src = os.path.join(graders_dir, grader_name)
             digest = self.file_cacher.put_file_from_path(
                 grader_src,
                 "Manager for task %s" % name)
-            if data['task_type'] == 'Communication' \
+            grader_name = os.path.basename(grader_name)
+            if data['type'] == 'Communication' \
                     and os.path.splitext(grader_name)[0] == 'grader':
                 grader_name = 'stub' + os.path.splitext(grader_name)[1]
             args["managers"][grader_name] = Manager(grader_name, digest)
@@ -286,13 +338,10 @@ class TpsTaskLoader(TaskLoader):
         if os.path.exists(manager_src):
             logger.info("Manager found, compiling")
             manager_exe = os.path.join(graders_dir, "manager")
-            ret = subprocess.call([
+            subprocess.call([
                 "g++", "-x", "c++", "-O2", "-static",
                 "-o", manager_exe, manager_src
             ])
-            if ret != 0:
-                logger.critical("Could not compile manager")
-                return None
             digest = self.file_cacher.put_file_from_path(
                 manager_exe,
                 "Manager for task %s" % name)
@@ -316,45 +365,63 @@ class TpsTaskLoader(TaskLoader):
             output_digest = self.file_cacher.put_file_from_path(
                 outfile,
                 "Output %s for task %s" % (codename, name))
-            testcase = Testcase(codename, True,
-                                input_digest, output_digest)
+            if codename.split('-')[0] != '0':
+                testcase = Testcase(codename, False,
+                                    input_digest, output_digest)
+            else:
+                testcase = Testcase(codename, True,
+                                    input_digest, output_digest)
             args["testcases"][codename] = testcase
 
         # Score Type
-        subtasks_dir = os.path.join(self.path, 'subtasks')
-        if not os.path.exists(subtasks_dir):
-            logger.warning('Subtask folder was not found')
-            subtasks = []
-        else:
-            subtasks = sorted(os.listdir(subtasks_dir))
-
-        if len(subtasks) == 0:
+        subtasks_json_src = os.path.join(self.path, 'subtasks.json')
+        if not os.path.exists(subtasks_json_src):
             number_tests = max(len(testcase_codenames), 1)
             args["score_type"] = "Sum"
             args["score_type_parameters"] = 100 / number_tests
         else:
-            args["score_type"] = "GroupMin"
+            args["score_type"] = "GroupSum"
             parsed_data = []
             subtask_no = -1
-            add_optional_name = False
-            for subtask in subtasks:
+            mapping_src = os.path.join(self.path, 'tests', 'mapping')
+            with open(subtasks_json_src, 'rt', encoding='utf-8') as json_file:
+                subtasks_data = json.load(json_file)
+
+            use_mapping = os.path.exists(mapping_src)
+            if use_mapping:
+                mapping_data = {}
+                for subtask in subtasks_data['subtasks']:
+                    mapping_data[subtask] = []
+                with open(mapping_src, 'rt', encoding='utf-8') as mapping_file:
+                    for row in mapping_file:
+                        row = row.strip().split(' ')
+                        if len(row) == 2:
+                            mapping_data[row[0]].append(row[1])
+
+            add_optional_name = data['add_optional_name'] if 'add_optional_name' in data else False
+
+            subtasks = sorted(subtasks_data['subtasks'].items(), key = lambda subtask: subtask[1]['index'])
+            for subtask, subtask_data in subtasks:
                 subtask_no += 1
-                with open(os.path.join(subtasks_dir, subtask), 'rt',
-                          encoding='utf-8') as subtask_json:
-                    subtask_data = json.load(subtask_json)
-                    score = int(subtask_data["score"])
-                    testcases = "|".join(
-                        re.escape(testcase)
-                        for testcase in subtask_data["testcases"]
-                    )
-                    optional_name = "Subtask %d" % subtask_no
-                    if subtask_no == 0 and score == 0:
-                        add_optional_name = True
-                        optional_name = "Samples"
-                    if add_optional_name:
-                        parsed_data.append([score, testcases, optional_name])
+                score = int(subtask_data["score"])
+                if use_mapping:
+                    if data["type"] == 'OutputOnly':
+                        codenames = sorted(list(set('^' + testcase.split('-')[0] for testcase in mapping_data[subtask])))
                     else:
-                        parsed_data.append([score, testcases])
+                        codenames = sorted(list(set('^' + testcase.split('-')[0] + '\\-' for testcase in mapping_data[subtask])))
+                    testcases = "|".join(codenames)
+                    if testcases == '':
+                        testcases = '|NO_TESTCASES_AVAILABLE'
+                else:
+                    testcases = subtask_data["regex"]
+                optional_name = "Subtask %d" % subtask_no
+                if subtask_no == 0 and score == 0:
+                #     continue   # We don't need sample testcase in CMS
+                    optional_name = "Samples"
+                if add_optional_name:
+                    parsed_data.append([score, testcases, optional_name])
+                else:
+                    parsed_data.append([score, testcases])
             args["score_type_parameters"] = parsed_data
 
         dataset = Dataset(**args)
