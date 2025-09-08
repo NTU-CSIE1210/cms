@@ -86,7 +86,6 @@ msgstr "輸出正確"
 msgid "Your submission ran and gave the correct answer"
 msgstr ""
 
-#, fuzzy
 msgid "Output is partially correct"
 msgstr "部分正確"
 
@@ -122,9 +121,8 @@ msgid ""
 "time limit."
 msgstr ""
 
-#, fuzzy
 msgid "Execution killed (could be triggered by violating memory limits)"
-msgstr "編譯程式因記憶體違規存取而強制終止 (信號 %s)"
+msgstr "編譯程式因記憶體違規存取而強制終止"
 
 msgid ""
 "The evaluation was killed by a signal. Among other things, this might be "
@@ -148,9 +146,8 @@ msgstr "略過編譯程序"
 msgid "File not submitted"
 msgstr "檔案未送出"
 
-#, fuzzy
 msgid "Question too long!"
-msgstr "測試檔案過大"
+msgstr "提問的問題太長啦！"
 
 #, python-format
 msgid ""
@@ -188,7 +185,7 @@ msgstr "本題有無限量的 %(type_pl)s."
 msgid "You start with no %(type_pl)s."
 msgstr "考試開始時沒有任何 %(type_pl)s."
 
-#, fuzzy, python-format
+#, python-format
 msgid "You start with one %(type_s)s."
 msgid_plural "You start with %(gen_initial)d %(type_pl)s."
 msgstr[0] "考試開始時沒有任何 %(type_s)s."
@@ -200,7 +197,7 @@ msgid_plural "Every %(gen_interval)g minutes "
 msgstr[0] "每分鐘"
 msgstr[1] "每隔 %(gen_interval)g 分鐘"
 
-#, fuzzy, python-format
+#, python-format
 msgid "you get another %(type_s)s, "
 msgid_plural "you get %(gen_number)d other %(type_pl)s, "
 msgstr[0] "你會得到一個 %(type_s)s,"
@@ -212,7 +209,7 @@ msgid_plural "up to a maximum of %(gen_max)d %(type_pl)s."
 msgstr[0] "上限為一個 %(type_s)s。"
 msgstr[1] "直到上限 %(gen_max)d 個 %(type_pl)s 為止。"
 
-#, fuzzy, python-format
+#, python-format
 msgid "you get another %(type_s)s."
 msgid_plural "you get %(gen_number)d other %(type_pl)s."
 msgstr[0] "你會得到一個 %(type_s)s。"
@@ -245,32 +242,28 @@ msgstr[0] ""
 msgid "You have no limitations on how you use them."
 msgstr "使用規則中沒有其他額外的限制。"
 
-#, fuzzy
 msgid "Too many print jobs!"
-msgstr "測試次數超出限制！"
+msgstr "列印次數超出限制！"
 
-#, fuzzy, python-format
+#, python-format
 msgid "You have reached the maximum limit of at most %d print jobs."
-msgstr "在考試期間, 您最多可以進行 %d 次測試。"
+msgstr "在考試期間, 您最多可以執行 %d 次列印工作。"
 
-#, fuzzy
 msgid "Invalid format!"
-msgstr "錯誤的測試檔案格式！"
+msgstr "錯誤的列印檔案格式！"
 
 msgid "Please select the correct files."
 msgstr "請選擇正確的檔案。"
 
-#, fuzzy
 msgid "File too big!"
-msgstr "測試檔案過大！"
+msgstr "檔案過大！"
 
-#, fuzzy, python-format
+#, python-format
 msgid "Each file must be at most %d bytes long."
-msgstr "個別程式碼檔案容量不得超過 %d bytes。"
+msgstr "個別程式碼檔案大小不得超過 %d bytes。"
 
-#, fuzzy
 msgid "Print job storage failed!"
-msgstr "測試檔案儲存失敗"
+msgstr "列印工作檔案儲存失敗"
 
 msgid "Please try again."
 msgstr "請再試一次"
@@ -292,9 +285,8 @@ msgstr "已送出詢問"
 msgid "Your question has been received, you will be notified when it is answered."
 msgstr "您的詢問已成功送出，待此詢問得到回覆後將會通知您。"
 
-#, fuzzy
 msgid "Print job received"
-msgstr "已收到測試"
+msgstr "已收到列印工作"
 
 msgid "Your print job has been received."
 msgstr ""
@@ -317,7 +309,6 @@ msgstr "評分中..."
 msgid "Evaluated"
 msgstr "已評測"
 
-#, fuzzy
 msgid "status"
 msgstr "狀態"
 
@@ -501,21 +492,17 @@ msgstr "新回覆"
 msgid "%d unread"
 msgstr "%d 則訊息未讀"
 
-#, fuzzy
 msgid "Until exam starts:"
 msgstr "距離考試開始:"
 
-#, fuzzy
 msgid "Until exam ends:"
 msgstr "距離考試結束:"
 
-#, fuzzy
 msgid "Until analysis starts:"
-msgstr "距離考試開始:"
+msgstr "距離試題解析:"
 
-#, fuzzy
 msgid "Until analysis ends:"
-msgstr "距離考試結束:"
+msgstr "試題解析尚餘:"
 
 msgid "Time left:"
 msgstr "剩餘時間:"
@@ -550,7 +537,6 @@ msgstr "遵循"
 msgid "GNU Affero General Public License"
 msgstr "GNU AGPL 通用公共許可證"
 
-#, fuzzy
 msgid "Choose an exam"
 msgstr "選擇一場考試"
 
@@ -562,9 +548,8 @@ msgid ""
 " task."
 msgstr ""
 
-#, fuzzy
 msgid "Submission details for compilation"
-msgstr "傳送詳細資料"
+msgstr "編譯詳情"
 
 msgid "Message"
 msgstr "訊息"
@@ -572,9 +557,8 @@ msgstr "訊息"
 msgid "Explanation"
 msgstr ""
 
-#, fuzzy
 msgid "Submission details for evaluation"
-msgstr "傳送詳細資料"
+msgstr "評分詳情"
 
 #, python-format
 msgid "Error %(status_code)s"
@@ -583,66 +567,58 @@ msgstr "錯誤 %(status_code)s"
 msgid "An error occured while the server was handling your request."
 msgstr "考試系統伺服器發生錯誤."
 
-#, fuzzy
 msgid ""
 "Note that attempts to tamper with CMS (such as probing the server with "
 "customized URLs) may be considered cheating and may lead to a bad grade."
-msgstr "擅自以非正當方式操作本系統將導致取消考試成績。"
+msgstr "擅自以非正當方式操作本系統（例如亂戳網址）將導致取消考試成績。"
 
-#, fuzzy
 msgid ""
 "If you encountered this error during normal usage, please notify the course "
 "staff."
-msgstr "若在正常使用的情況下發生錯誤，請聯絡課程助教。"
+msgstr "若你是在正常使用的情況下發生錯誤，請聯絡課程助教。"
 
 msgid "General information"
 msgstr "應試資訊"
 
-#, fuzzy
 msgid "The exam hasn't started yet."
 msgstr "考試尚未開始"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The exam will start at %(start_time)s and will end at %(stop_time)s."
 msgstr "考試時間將於 %(start_time)s 開始，至 %(stop_time)s 結束。"
 
-#, fuzzy
 msgid "The exam is currently running."
 msgstr "考試進行中"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The exam started at %(start_time)s and will end at %(stop_time)s."
 msgstr "考試時間為 %(start_time)s 至 %(stop_time)s。"
 
-#, fuzzy
 msgid "The exam has already ended."
 msgstr "考試已經結束"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The exam started at %(start_time)s and ended at %(stop_time)s."
 msgstr "考試時間於 %(start_time)s 開始，並已於 %(stop_time)s 結束。"
 
-#, fuzzy
 msgid "The analysis mode hasn't started yet."
-msgstr "考試尚未開始"
+msgstr "試題解析階段尚未開始"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The analysis mode will start at %(start_time)s and will end at %(stop_time)s."
 msgstr "試題解析時間將於 %(start_time)s 開始，至 %(stop_time)s 結束。"
 
-#, fuzzy
 msgid "The analysis mode is currently running."
-msgstr "試題解析時間進行中"
+msgstr "試題解析階段進行中"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The analysis mode started at %(start_time)s and will end at %(stop_time)s."
 msgstr "試題解析時間時間為 %(start_time)s 至 %(stop_time)s."
 
-#, fuzzy
 msgid "The analysis mode has already ended."
 msgstr "試題解析時間已經結束"
 
-#, fuzzy, python-format
+#, python-format
 msgid "The analysis mode started at %(start_time)s and ended at %(stop_time)s."
 msgstr "試題解析時間時間於 %(start_time)s 開始，並已於 %(stop_time)s 結束。"
 
@@ -667,7 +643,6 @@ msgstr "在題目敘述頁面中，可以看到該題目 %(type_pl)s 的使用�
 msgid "You have a set of tokens shared among all tasks."
 msgstr "您有一些所有題目共用的 Token。"
 
-#, fuzzy
 msgid ""
 "You have two types of tokens: a set of <em>exam-tokens</em> shared among all"
 " tasks and a distinct set of <em>task-tokens</em> for each task."
@@ -678,7 +653,7 @@ msgid ""
 "one of each type."
 msgstr "對於每次傳送而言, 使用兩類 Token 各一枚即可觀看該次詳細的評測結果."
 
-#, fuzzy, python-format
+#, python-format
 msgid "You can submit at most %(submissions)s solutions during this exam."
 msgstr "您在本題目之傳送次數已達上限 (%(submissions) 次)"
 
@@ -692,11 +667,9 @@ msgid ""
 " time frame of %(per_user_time)s."
 msgstr "每位參賽者可以選擇連續的 %(per_user_time)s 參加本次模擬考."
 
-#, fuzzy
 msgid "As soon as the exam starts you can choose to start your time frame."
-msgstr "當考試開啟時, 您就可以參加模擬考並開始計時."
+msgstr "在表訂模擬考時段開始後，您就可以開啟模擬考並開始計時。"
 
-#, fuzzy
 msgid ""
 "Once you start, you can submit solutions until the end of the time frame or "
 "until the end of the exam, whatever comes first."
@@ -709,7 +682,6 @@ msgstr "點擊以下按鈕開啟模擬考並開始計時。"
 msgid "You started your time frame at %(start_time)s."
 msgstr "您已在 %(start_time)s 開始模擬考計時。"
 
-#, fuzzy
 msgid ""
 "You can submit solutions until the end of the time frame or until the end of"
 " the exam, whatever comes first."
@@ -787,9 +759,8 @@ msgstr "上傳"
 msgid "You cannot print anything any more as you have used up your printing quota."
 msgstr ""
 
-#, fuzzy
 msgid "Previous print jobs"
-msgstr "測試記錄"
+msgstr "列印記錄"
 
 msgid "Date and time"
 msgstr "日期與時間"
@@ -797,20 +768,17 @@ msgstr "日期與時間"
 msgid "Time"
 msgstr "時間"
 
-#, fuzzy
 msgid "File name"
-msgstr "標題"
+msgstr "檔案名稱"
 
 msgid "Status"
 msgstr "狀態"
 
-#, fuzzy
 msgid "Preparing..."
-msgstr "執行中..."
+msgstr "準備中..."
 
-#, fuzzy
 msgid "no print jobs yet"
-msgstr "尚未測試"
+msgstr "尚無列印工作"
 
 msgid "The passwords do not match!"
 msgstr ""
@@ -827,69 +795,62 @@ msgstr ""
 msgid "The password is not correct."
 msgstr ""
 
-#, fuzzy
 msgid "Registration"
 msgstr "註冊"
 
 msgid "Please fill in the fields to register"
 msgstr ""
 
-#, fuzzy
 msgid "New user"
-msgstr "新回覆"
+msgstr "新使用者"
 
 msgid "Join exam"
-msgstr ""
+msgstr "加入考試"
 
 msgid "First name"
-msgstr ""
+msgstr "名字"
 
-#, fuzzy
 msgid "Last name"
-msgstr "標題"
+msgstr "姓氏"
 
-#, fuzzy
 msgid "E-mail"
-msgstr "詳細資料"
+msgstr "電子郵件信箱"
 
-#, fuzzy
 msgid "Representing"
-msgstr "線上測試"
+msgstr "代表"
 
 #, python-format
 msgid "Must be one character or more."
 msgid_plural "Must be %(min_length)s characters or more."
-msgstr[0] ""
+msgstr[0] "請輸入一個或多個字元。"
+msgstr[1] "請輸入至少 %(min_length)s 個字元。"
 
-#, fuzzy
 msgid "Confirm password"
-msgstr "密碼"
+msgstr "請確認密碼"
 
 msgid "Registered in the exam successfully!"
 msgstr ""
 
-#, fuzzy
 msgid "Your username is:"
-msgstr "帳號"
+msgstr "帳號名稱"
 
 msgid "Your password is stored securely."
 msgstr ""
 
-#, fuzzy
 msgid "Back to login"
-msgstr "無法登入"
+msgstr "回到登入畫面"
 
 msgid "Compilation output"
 msgstr "編譯訊息"
 
 msgid "Compilation outcome:"
-msgstr "編譯結果:"
+msgstr "編譯結果："
 
 msgid "Compilation time:"
-msgstr "編譯時間:"
+msgstr "編譯時間："
 
 msgid "Memory used:"
-msgstr "記憶體使用量:"
+msgstr "記憶體使用量："
 
 msgid "Standard output"
 msgstr "編譯輸出 (stdout)"
@@ -940,7 +901,7 @@ msgstr "詳細資訊"
 msgid "Compilation commands"
 msgstr "編譯指令"
 
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "You can find the rules for the %(type_pl)s on the <a "
 "href=\"%(contest_root)s\">exam overview page</a>."
@@ -964,24 +925,20 @@ msgstr "載入中..."
 msgid "%(name)s (%(short_name)s) <small>submissions</small>"
 msgstr "%(name)s (%(short_name)s) <small>評測頁面</small>"
 
-#, fuzzy
 msgid "Score:"
 msgstr "得分"
 
-#, fuzzy
 msgid "Public score:"
-msgstr "公開得分"
+msgstr "公開的部分總分"
 
-#, fuzzy
 msgid "Score of tokened submissions:"
-msgstr "評測記錄"
+msgstr "使用 Token 的提交紀錄得分"
 
-#, fuzzy
 msgid "Total score:"
-msgstr "總得分"
+msgstr "總分"
 
 msgid "Submit a solution"
-msgstr "傳送作答"
+msgstr "上傳答案"
 
 msgid "You may submit any subset of outputs in a single submission."
 msgstr ""
@@ -992,10 +949,10 @@ msgstr ""
 
 #, fuzzy
 msgid "submission.zip"
-msgstr "評測頁面"
+msgstr ""
 
 msgid "Previous submissions"
-msgstr "評測記錄"
+msgstr "提交紀錄"
 
 msgid "Tokens are not allowed on this task."
 msgstr ""
@@ -1028,16 +985,14 @@ msgstr "本題 Token 已用盡."
 msgid "But you will have to wait until %(expiration_time)s to use it."
 msgstr "但需等待至 %(expiration_time)s 後才可再次使用 Token."
 
-#, fuzzy
 msgid "Unofficial submissions"
-msgstr "評測頁面"
+msgstr "非正式繳交紀錄"
 
-#, fuzzy
 msgid "Official submissions"
-msgstr "評測頁面"
+msgstr "正式繳交紀錄"
 
 msgid "Submission details"
-msgstr "傳送詳細資料"
+msgstr "繳交詳情"
 
 msgid "Close"
 msgstr "關閉"
@@ -1052,7 +1007,6 @@ msgstr "傳送測試"
 msgid "You can submit %(user_tests_left)s more test(s)."
 msgstr ""
 
-#, fuzzy
 msgid "input"
 msgstr "輸入"
 
@@ -1093,9 +1047,8 @@ msgstr "得分"
 msgid "Token"
 msgstr "Token"
 
-#, fuzzy
 msgid "no submissions"
-msgstr "評測頁面"
+msgstr "沒有上傳紀錄"
 
 msgid "Played"
 msgstr "已使用"
