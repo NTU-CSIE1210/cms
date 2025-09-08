@@ -904,7 +904,7 @@ msgstr "對於每次傳送而言, 使用兩類 Token 各一枚即可觀看該次
 #: server/contest/templates/overview.html:123
 #, fuzzy, python-format
 msgid "You can submit at most %(submissions)s solutions during this exam."
-msgstr "您在本題目之傳送次數已達上限 (%d 次)"
+msgstr "您在本題目之傳送次數已達上限 (%(submissions) 次)"
 
 #: server/contest/templates/overview.html:129
 #, python-format
