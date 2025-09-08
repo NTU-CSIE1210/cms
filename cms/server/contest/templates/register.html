@@ -82,7 +82,7 @@ $(document).ready(function() {
                     } else {
                         // User is already participating in this contest
                         $("#username-input").addClass("error");
-                        $("#username-input span.help-block").text("{% trans %}This user is already registered in the contest.{% endtrans %}");
+                        $("#username-input span.help-block").text("{% trans %}This user is already registered in the exam.{% endtrans %}");
                         $("#username").focus();
                     }
                 } else if (data.status === 404) {
@@ -113,7 +113,7 @@ $(document).ready(function() {
         <p>{% trans %}Please fill in the fields to register{% endtrans %}</p>
         <ul class="nav nav-pills">
             <li class="active" id="register-pill"><a href="#" data-toggle="tab">{% trans %}New user{% endtrans %}</a></li>
-            <li id="join-pill"><a href="#" data-toggle="tab">{% trans %}Join contest{% endtrans %}</a></li>
+            <li id="join-pill"><a href="#" data-toggle="tab">{% trans %}Join exam{% endtrans %}</a></li>
         </ul>
         <form id="signup" class="form-horizontal" action="{{ contest_url('register') }}">
             {{ xsrf_form_html|safe }}
@@ -202,7 +202,7 @@ $(document).ready(function() {
     <div id="confirmed-mask" style="display: none;">
         <h1>{% trans %}Registration{% endtrans %}</h1>
 
-        <p>{% trans %}Registered in the contest successfully!{% endtrans %}</p>
+        <p>{% trans %}Registered in the exam successfully!{% endtrans %}</p>
 
         <p>{% trans %}Your username is:{% endtrans %}</p>
 

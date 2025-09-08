@@ -143,7 +143,7 @@
         </p>
     {% elif tokens_tasks == TOKEN_MODE_INFINITE %}
         <p>
-        {% trans type_pl=_("tokens"), contest_root=contest_url() %}You can find the rules for the {{ type_pl }} on the <a href="{{ contest_root }}">contest overview page</a>.{% endtrans %}
+        {% trans type_pl=_("tokens"), contest_root=contest_url() %}You can find the rules for the {{ type_pl }} on the <a href="{{ contest_root }}">exam overview page</a>.{% endtrans %}
         </p>
     {% else %}
         <p>
@@ -152,7 +152,7 @@
 
         <p>
         {% trans %}Remember that to see the detailed result of a submission you need to use both a contest-token and a task-token.{% endtrans %}
-        {%+ trans type_pl=_("contest-tokens"), contest_root=contest_url() %}You can find the rules for the {{ type_pl }} on the <a href="{{ contest_root }}">contest overview page</a>.{% endtrans %}
+        {%+ trans type_pl=_("contest-tokens"), contest_root=contest_url() %}You can find the rules for the {{ type_pl }} on the <a href="{{ contest_root }}">exam overview page</a>.{% endtrans %}
         </p>
     {% endif %}
     </td>
