@@ -291,7 +291,7 @@ msgstr "列印請求超出限制！"
 
 #, fuzzy, python-format
 msgid "You have reached the maximum limit of at most %d print jobs."
-msgstr "在競賽中, 您最多可以進行 %d 次測試."
+msgstr "在考試中, 您最多可以進行 %d 次測試."
 
 msgid "Invalid format!"
 msgstr "測試檔案格式錯誤！"
@@ -318,7 +318,7 @@ msgstr "傳送次數超出限制！"
 
 #, python-format
 msgid "You have reached the maximum limit of at most %d submissions among all tasks."
-msgstr "您在本競賽之總傳送次數已達上限（%d 次）"
+msgstr "您在本次考試之總傳送次數已達上限（%d 次）"
 
 #, python-format
 msgid "You have reached the maximum limit of at most %d submissions on this task."
@@ -330,7 +330,7 @@ msgstr "傳送過於頻繁！"
 
 #, fuzzy, python-format
 msgid "Among all tasks, you can submit again after %d seconds from last submission."
-msgstr "在本競賽的最後一次傳送過後 %d 秒始可再次傳送。"
+msgstr "在本次考試的最後一次傳送過後 %d 秒始可再次傳送。"
 
 #, python-format
 msgid "For this task, you can submit again after %d seconds from last submission."
@@ -368,7 +368,7 @@ msgstr "測試次數超出限制！"
 
 #, fuzzy, python-format
 msgid "You have reached the maximum limit of at most %d tests among all tasks."
-msgstr "您已達到競賽中最多可以進行 %d 次測試的限制。"
+msgstr "您已達到本場考試中最多可以進行 %d 次測試的限制。"
 
 #, fuzzy, python-format
 msgid "You have reached the maximum limit of at most %d tests on this task."
@@ -379,11 +379,11 @@ msgstr "測試過於頻繁！"
 
 #, python-format
 msgid "Among all tasks, you can test again after %d seconds from last test."
-msgstr "在競賽中，兩次測試之間必須間隔至少 %d 秒。"
+msgstr "在考試期間，兩次測試之間必須間隔至少 %d 秒。"
 
 #, python-format
 msgid "For this task, you can test again after %d seconds from last test."
-msgstr "在本題中，兩次測試之間必須間隔至少 %d 秒。"
+msgstr "在考試期間，兩次測試之間必須間隔至少 %d 秒。"
 
 msgid "Invalid test format!"
 msgstr "測試檔案格式錯誤！"
@@ -451,7 +451,7 @@ msgid "Welcome"
 msgstr "歡迎"
 
 msgid "Please log in"
-msgstr "請登入後參與競賽"
+msgstr "請登入後參與考試"
 
 msgid "Username"
 msgstr "帳號"
@@ -481,11 +481,11 @@ msgstr "新回覆"
 msgid "%d unread"
 msgstr "%d 則訊息未讀"
 
-msgid "Until contest starts:"
-msgstr "距離競賽開始："
+msgid "Until exam starts:"
+msgstr "距離考試開始："
 
-msgid "Until contest ends:"
-msgstr "距離競賽結束："
+msgid "Until exam ends:"
+msgstr "距離考試結束："
 
 #, fuzzy
 msgid "Until analysis starts:"
@@ -502,7 +502,7 @@ msgid "Server time:"
 msgstr "現在時間："
 
 msgid "Overview"
-msgstr "競賽概況"
+msgstr "考試概況"
 
 msgid "Statement"
 msgstr "題目敘述"
@@ -529,8 +529,8 @@ msgstr "遵循"
 msgid "GNU Affero General Public License"
 msgstr "GNU AGPL 通用公眾授權條款"
 
-msgid "Choose a contest"
-msgstr "選擇一場競賽"
+msgid "Choose an exam"
+msgstr "選擇一場考試"
 
 msgid "Programming languages and libraries"
 msgstr "程式語言和函式庫"
@@ -558,11 +558,11 @@ msgstr "錯誤 %(status_code)s"
 
 #, fuzzy
 msgid "An error occured while the server was handling your request."
-msgstr "競賽系統伺服器發生錯誤."
+msgstr "考試系統伺服器發生錯誤."
 
 #, fuzzy
 msgid "Note that attempts to tamper with Contest Management System (such as probing the server with customized URLs) may be considered cheating and may lead to disqualification."
-msgstr "擅自以非正當方式操作本系統將導致取消競賽資格."
+msgstr "擅自以非正當方式操作本系統將導致取消考試資格."
 
 #, fuzzy
 msgid "If you encountered this error during normal usage, please notify the contest administrators."
@@ -595,52 +595,52 @@ msgid "No tokens"
 msgstr "Token 已用盡"
 
 msgid "General information"
-msgstr "競賽資訊"
+msgstr "應試資訊"
 
-msgid "The contest hasn't started yet."
-msgstr "競賽尚未開始"
-
-#, python-format
-msgid "The contest will start at %(start_time)s and will end at %(stop_time)s."
-msgstr "競賽時間將於 %(start_time)s 開始, 至 %(stop_time)s 結束."
-
-msgid "The contest is currently running."
-msgstr "競賽進行中"
+msgid "The exam hasn't started yet."
+msgstr "考試尚未開始"
 
 #, python-format
-msgid "The contest started at %(start_time)s and will end at %(stop_time)s."
-msgstr "競賽時間為 %(start_time)s 至 %(stop_time)s."
+msgid "The exam will start at %(start_time)s and will end at %(stop_time)s."
+msgstr "考試將於 %(start_time)s 開始, 至 %(stop_time)s 結束."
 
-msgid "The contest has already ended."
-msgstr "競賽已經結束"
+msgid "The exam is currently running."
+msgstr "考試進行中"
 
 #, python-format
-msgid "The contest started at %(start_time)s and ended at %(stop_time)s."
-msgstr "競賽時間於 %(start_time)s 開始, 並已於 %(stop_time)s 結束."
+msgid "The exam started at %(start_time)s and will end at %(stop_time)s."
+msgstr "考試時間為 %(start_time)s 至 %(stop_time)s."
+
+msgid "The exam has already ended."
+msgstr "考試已經結束"
+
+#, python-format
+msgid "The exam started at %(start_time)s and ended at %(stop_time)s."
+msgstr "考試時間於 %(start_time)s 開始, 並已於 %(stop_time)s 結束."
 
 #, fuzzy
 msgid "The analysis mode hasn't started yet."
-msgstr "競賽尚未開始"
+msgstr "題解模式尚未啟動"
 
 #, fuzzy, python-format
 msgid "The analysis mode will start at %(start_time)s and will end at %(stop_time)s."
-msgstr "競賽時間將於 %(start_time)s 開始, 至 %(stop_time)s 結束."
+msgstr "題解模式將於 %(start_time)s 開始, 至 %(stop_time)s 結束."
 
 #, fuzzy
 msgid "The analysis mode is currently running."
-msgstr "競賽進行中"
+msgstr "題解模式進行中"
 
 #, fuzzy, python-format
 msgid "The analysis mode started at %(start_time)s and will end at %(stop_time)s."
-msgstr "競賽時間為 %(start_time)s 至 %(stop_time)s."
+msgstr "題解模式時間為 %(start_time)s 至 %(stop_time)s."
 
 #, fuzzy
 msgid "The analysis mode has already ended."
-msgstr "競賽已經結束"
+msgstr "題解模式已經結束"
 
 #, fuzzy, python-format
 msgid "The analysis mode started at %(start_time)s and ended at %(stop_time)s."
-msgstr "競賽時間於 %(start_time)s 開始, 並已於 %(stop_time)s 結束."
+msgstr "題解模式時間於 %(start_time)s 開始, 並已於 %(stop_time)s 結束."
 
 msgid "You have an infinite number of tokens."
 msgstr "在本題中有無限量的 Token 可供使用."
@@ -676,34 +676,34 @@ msgid "You can submit at most %(user_tests)s user tests during this contest."
 msgstr ""
 
 #, python-format
-msgid "Every user is allowed to compete (i.e. submit solutions) for a uninterrupted time frame of %(per_user_time)s."
-msgstr "每位參賽者可以選擇連續的 %(per_user_time)s 參加本次計時競賽."
+msgid "Every user is allowed to run the mock exam (i.e. submit solutions) for a uninterrupted time frame of %(per_user_time)s."
+msgstr "每位參賽者可以選擇連續的 %(per_user_time)s 參加本次模擬考."
 
-msgid "As soon as the contest starts you can choose to start your time frame."
-msgstr "當競賽開啟時, 您就可以參加競賽並開始計時."
+msgid "As soon as the exam starts you can choose to start your time frame."
+msgstr "當考試開啟時, 您就可以加入並開始計時."
 
-msgid "Once you start, you can submit solutions until the end of the time frame or until the end of the contest, whatever comes first."
-msgstr "開始計時後即可開始作答. 此外, 若整體競賽已終止, 即使您自己的競賽計時器尚未結束, 您也必須停止作答."
+msgid "Once you start, you can submit solutions until the end of the time frame or until the end of the exam, whatever comes first."
+msgstr "開始計時後即可開始作答. 此外, 若整場考試已終止, 即使您自己的考試計時器尚未結束, 您也必須停止作答."
 
 msgid "By clicking on the button below you can start your time frame."
 msgstr "點擊以下按鈕確認開始參加競賽並開始計時."
 
 #, python-format
 msgid "You started your time frame at %(start_time)s."
-msgstr "您已在 %(start_time)s 開始競賽計時."
+msgstr "您已在 %(start_time)s 開始考試計時."
 
-msgid "You can submit solutions until the end of the time frame or until the end of the contest, whatever comes first."
-msgstr "您可以作答到整體競賽終止或您的競賽計時器結束為止."
+msgid "You can submit solutions until the end of the time frame or until the end of the exam, whatever comes first."
+msgstr "您可以作答到考試預設的結束時間或您的考試計時器結束為止."
 
 #, python-format
 msgid "You started your time frame at %(start_time)s and you already finished it."
-msgstr "您已在 %(start_time)s 開始競賽計時, 而現在時間已結束."
+msgstr "您已在 %(start_time)s 開始計時, 而現在時間已結束."
 
 msgid "There's nothing you can do now."
 msgstr "目前無法進行任何操作."
 
 msgid "You never started your time frame. Now it's too late."
-msgstr "您尚未開始競賽, 但現在已超過允許時間."
+msgstr "您尚未開始考試, 但現在已超過允許時間."
 
 msgid "Start!"
 msgstr "開始!"
@@ -815,8 +815,8 @@ msgid "New user"
 msgstr "新回覆"
 
 #, fuzzy
-msgid "Join contest"
-msgstr "選擇一場競賽"
+msgid "Join exam"
+msgstr "選擇一場考試"
 
 msgid "First name"
 msgstr ""
