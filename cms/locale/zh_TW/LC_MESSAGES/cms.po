@@ -665,15 +665,15 @@ msgstr ""
 msgid ""
 "Every user is allowed to compete (i.e. submit solutions) for a uninterrupted"
 " time frame of %(per_user_time)s."
-msgstr "每位參賽者可以選擇連續的 %(per_user_time)s 參加本次模擬考."
+msgstr "每個人可以選擇連續的 %(per_user_time)s參加本次模擬考。"
 
 msgid "As soon as the exam starts you can choose to start your time frame."
-msgstr "在表訂模擬考時段開始後，您就可以開啟模擬考並開始計時。"
+msgstr "在表訂模擬考的開放期間，您可以開啟模擬考並開始計時。"
 
 msgid ""
 "Once you start, you can submit solutions until the end of the time frame or "
 "until the end of the exam, whatever comes first."
-msgstr "開始計時後即可開始作答。此外，若整體考試時間已終止，即使您自己的考試計時器尚未結束，您也必須停止作答。"
+msgstr "開始計時後即可開始作答。此外，若模擬考開放時段已過，即使您自己的考試計時器尚未結束，您也必須停止作答。"
 
 msgid "By clicking on the button below you can start your time frame."
 msgstr "點擊以下按鈕開啟模擬考並開始計時。"
