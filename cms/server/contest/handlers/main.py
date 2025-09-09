@@ -77,12 +77,9 @@ class MainHandler(ContestHandler):
     @multi_contest
     def get(self):
         # Tornado's request object always has .uri
-        path = self.request.uri.split("?")[0]  # strip query params
-        if not path.endswith("/"):
-            path += "/"
-        upsolve_url = path + "upsolve/"
-        upsolve_url = self.request.protocol + "://" + self.request.host + upsolve_url
-
+        prefix = self.request.headers.get("X-Forwarded-Prefix", "")
+        upsolve_url = prefix.rstrip("/") + "-upsolve/"
+        
         # Add to render context
         params = dict(self.r_params)
         params["upsolve_url"] = upsolve_url
