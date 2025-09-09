@@ -76,8 +76,8 @@ class MainHandler(ContestHandler):
     """
     @multi_contest
     def get(self):
-        # Compute upsolve_url here
-        path = self.request.path
+        # Tornado's request object always has .uri
+        path = self.request.uri.split("?")[0]  # strip query params
         if not path.endswith("/"):
             path += "/"
         upsolve_url = path + "upsolve/"
