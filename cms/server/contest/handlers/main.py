@@ -76,7 +76,17 @@ class MainHandler(ContestHandler):
     """
     @multi_contest
     def get(self):
-        self.render("overview.html", **self.r_params)
+        # Compute upsolve_url here
+        path = self.request.path
+        if not path.endswith("/"):
+            path += "/"
+        upsolve_url = path + "upsolve/"
+
+        # Add to render context
+        params = dict(self.r_params)
+        params["upsolve_url"] = upsolve_url
+
+        self.render("overview.html", **params)
 
 
 class RegistrationHandler(ContestHandler):

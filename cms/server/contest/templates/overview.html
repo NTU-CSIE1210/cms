@@ -151,8 +151,6 @@
         {%+ trans %}You can submit solutions until the end of the time frame or until the end of the exam, whatever comes first.{% endtrans %}
     {% elif actual_phase == +1 %}
         {% trans start_time=participation.starting_time|format_datetime_smart %}You started your time frame at {{ start_time }} and you already finished it.{% endtrans %}
-        {% set base = request.path %}
-        {% set upsolve_url = base ~ ('upsolve/' if base[-1] == '/' else '/upsolve/') %}
         {% trans url=upsolve_url %}You can upsolve the problems at {{ url }}{% endtrans %}
     {% elif actual_phase >= +2 %}
         {% if participation.starting_time is none %}
