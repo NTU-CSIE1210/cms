@@ -26,9 +26,11 @@
 {% elif phase == 0 %}
         {% trans %}The exam is currently running.{% endtrans %}
         </p>
+        {% if actual_phase == 0 %}
         <p style="font-size:3em;line-height:36px;">
           Please download <a href="./all-tasks.zip">all-tasks.zip</a> for the exam.
         </p>
+        {% endif %}
         <p>
         {% trans start_time=(contest.start + participation.delay_time)|format_datetime_smart,
                  stop_time=(contest.stop + participation.delay_time + participation.extra_time)|format_datetime_smart %}
