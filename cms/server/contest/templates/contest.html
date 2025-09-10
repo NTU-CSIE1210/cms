@@ -181,6 +181,10 @@ $(document).ready(function () {
         {% for t_iter in contest.tasks %}
                             <li class="nav-header">
                                 {{ t_iter.name }}
+                                {% set count = submissions_by_task.get(t_iter.id, 0) %}
+                                {% if count > 0 %}
+                                <span class="label label-success">submitted {{ count }} {{ "time" if count == 1 else "times" }}</span>
+                                {% endif %}
                             </li>
                             <li{% if page == "task_description" and task == t_iter %} class="active"{% endif %}>
                                 <a href="{{ contest_url("tasks", t_iter.name, "description") }}">{% trans %}Statement{% endtrans %}</a>

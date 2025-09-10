@@ -44,6 +44,7 @@ try:
 except ImportError:
     import tornado.web as tornado_web
 
+from sqlalchemy import func
 from cms import config, TOKEN_MODE_MIXED
 from cms.db import Contest, Submission, Task, UserTest
 from cms.locale import filter_language_codes
@@ -181,6 +182,7 @@ class ContestHandler(BaseHandler):
         ret["printing_enabled"] = (config.printer is not None)
         ret["questions_enabled"] = self.contest.allow_questions
         ret["testing_enabled"] = self.contest.allow_user_tests
+        submissions_by_task = {}
 
         if self.current_user is not None:
             participation = self.current_user
@@ -200,11 +202,30 @@ class ContestHandler(BaseHandler):
                 ret["current_phase_end"], ret["valid_phase_begin"], \
                 ret["valid_phase_end"] = res
 
+            
             if ret["actual_phase"] == 0:
                 ret["phase"] = 0
 
+                # ---- NEW: compute submissions_by_task in one query ----
+                # Returns rows like (task_id, count)
+                rows = (
+                    self.sql_session.query(Submission.task_id, func.count(Submission.id))
+                    .filter(Submission.participation_id == participation.id)
+                    .group_by(Submission.task_id)
+                    .all()
+                )
+                submissions_by_task = {t.id: 0 for t in self.contest.tasks}
+                for task_id, cnt in rows:
+                    submissions_by_task[task_id] = cnt
+                # -------------------------------------------------------
+
+            
+
             # set the timezone used to format timestamps
             ret["timezone"] = get_timezone(participation.user, self.contest)
+
+        # update user submissions by task
+        ret["submissions_by_task"] = submissions_by_task
 
         # some information about token configuration
         ret["tokens_contest"] = self.contest.token_mode
