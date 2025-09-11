@@ -421,3 +421,29 @@ class AllTasksZipHandler(ContestHandler):
                   break
               self.write(data)
       self.finish()
+
+class PrintOutPdfHandler(ContestHandler):
+    @tornado_web.authenticated
+    @actual_phase_required(0, 3)
+    @multi_contest
+    def get(self):
+      file_path = "/home/cmsuser/contest-data/print-out.pdf"
+
+      if not os.path.exists(file_path):
+          self.set_status(404)
+          self.write("File not found")
+          return
+
+      # Set headers
+      self.set_header('Content-Type', 'application/pdf')
+      self.set_header('Content-Disposition', 'attachment; filename=print-out.pdf')
+      self.set_header('Content-Length', os.path.getsize(file_path))
+
+      # Efficiently stream the file
+      with open(file_path, 'rb') as f:
+          while True:
+              data = f.read(4096)
+              if not data:
+                  break
+              self.write(data)
+      self.finish()
