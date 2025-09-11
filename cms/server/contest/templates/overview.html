@@ -26,7 +26,7 @@
 {% elif phase == 0 %}
         {% trans %}The exam is currently running.{% endtrans %}
         </p>
-        {% if actual_phase == 0 %}
+        {% if actual_phase == 0 or (contest.analysis_enabled and phase == 2) %}
         <p style="font-size:2em;line-height:26px;">
           Please check <a href="./print-out.pdf">print-out.pdf</a> and download <a href="./all-tasks.zip">all-tasks.zip</a> for the exam.
         </p>
