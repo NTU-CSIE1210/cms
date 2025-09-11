@@ -34,7 +34,8 @@ from .main import \
     NotificationsHandler, \
     PrintingHandler, \
     DocumentationHandler, \
-    AllTasksZipHandler
+    AllTasksZipHandler, \
+    PrintOutPdfHandler
 from .task import \
     TaskDescriptionHandler, \
     TaskStatementViewHandler, \
