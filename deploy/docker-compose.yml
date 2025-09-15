@@ -1,0 +1,26 @@
+services:
+  cms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    cgroup: host
+    container_name: cms_exam1
+    restart: unless-stopped
+    ports:
+      - "48763:8888"
+      - "48764:8889"
+    volumes:
+      - /sys/fs/cgroup/unified:/sys/fs/cgroup/unified:rw
+      - /var/lib/isolate:/var/lib/isolate
+      - cms_pg_exam1:/var/lib/postgresql/data
+      - cms_install_exam1:/opt/cms/install
+    environment:
+      - TZ="Asia/Taipei"
+      - SRC_DIR=/home/cmsuser/src
+      - CMS_DB_NAME=cmsdb
+      - CMS_DB_USER=cmsuser
+      - CMS_DB_PASS='TBxwHoAktAktEleLW'
+    command: ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+volumes:
+  cms_pg_exam1:
+  cms_install_exam1:
