@@ -93,14 +93,16 @@ def extract_outcome_and_text(sandbox):
         except UnicodeDecodeError as error:
             logger.error("Manager stdout (outcome) is not valid UTF-8. %r",
                          error)
-            raise ValueError("Cannot decode the outcome.")
+            outcome = 0
+            # raise ValueError("Cannot decode the outcome.")
 
     with sandbox.get_file_text(sandbox.stderr_file) as stderr_file:
         try:
             text = _filter_ansi_escape(stderr_file.readline().strip())
         except UnicodeDecodeError as error:
             logger.error("Manager stderr (text) is not valid UTF-8. %r", error)
-            raise ValueError("Cannot decode the text.")
+            text = f"wrong: Cannot decode the text. {error}"
+            # raise ValueError("Cannot decode the text.")
 
     try:
         outcome = float(outcome)
