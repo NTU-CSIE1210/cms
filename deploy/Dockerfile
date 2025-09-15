@@ -217,6 +217,7 @@ EXPOSE 8888 8889
 # 9) Run as root (entrypoint uses runuser to drop privileges where needed)
 USER root
 COPY setup-postgres.sh /usr/local/bin/setup-postgres
+RUN chmod +x /usr/local/bin/setup-postgres
 
 
 # 10) Entrypoint
