@@ -126,12 +126,26 @@ cat >/usr/local/bin/start-cms <<'SCRIPT'
 #!/usr/bin/env bash
 set -euo pipefail
 
+# DB settings (from env or defaults) and URL used below
+CMS_DB_NAME="${CMS_DB_NAME:-cmsdb}"
+CMS_DB_USER="${CMS_DB_USER:-cmsuser}"
+CMS_DB_PASS="${CMS_DB_PASS:-cmspassword}"
+CMS_DB_URL="postgresql://${CMS_DB_USER}:${CMS_DB_PASS}@localhost/${CMS_DB_NAME}"
+
+# Fast path: if already initialized before, just start supervisord
+CMS_INSTALL_DIR="${CMS_INSTALL_DIR:-/opt/cms/install}"
+INIT_MARKER="${CMS_INSTALL_DIR}/.initialized"
+if [ -f "${INIT_MARKER}" ]; then
+  echo "[fast] CMS already initialized; starting supervisord only..."
+  exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+fi
+
 echo "[cfg] Installing CMS configs into /etc..."
 # Copy sample configs (root-writable location CMS expects)
 [ -f /etc/cms.conf ] || cp "${SRC_DIR}/config/cms.conf.sample" /etc/cms.conf
 [ -f /etc/cms.ranking.conf ] || cp "${SRC_DIR}/config/cms.ranking.conf.sample" /etc/cms.ranking.conf
 # Patch DB URL into /etc/cms.conf
-sed -i "s|^\s*database\s*=.*$|database = \"${CMS_DB_URL}\"|" /etc/cms.conf
+sed -i "s|^[[:space:]]*database[[:space:]]*=.*$|database = \"${CMS_DB_URL}\"|" /etc/cms.conf
 
 # Ensure Postgres is initialized (run as postgres)
 if [ ! -s "${PGDATA}/PG_VERSION" ]; then
@@ -139,15 +153,9 @@ if [ ! -s "${PGDATA}/PG_VERSION" ]; then
   runuser -u postgres -- /usr/lib/postgresql/16/bin/initdb -D "${PGDATA}"
 fi
 
-# Start supervisord (which starts postgres)
-echo "[boot] Starting supervisord (postgres will start)..."
-mkdir -p /var/log/supervisor
-# /usr/bin/supervisord -c /etc/supervisor/supervisord.conf &
-
-# Wait for Postgres to become ready
-echo "[wait] Waiting for PostgreSQL..."
-# Start Postgres temporarily for initialization
-/usr/lib/postgresql/16/bin/pg_ctl -D "${PGDATA}" -o "-c listen_addresses=localhost" -w start
+# Ensure Postgres, role, DB, and grants via helper script
+echo "[db] Ensuring Postgres and CMS DB are ready..."
+/usr/local/bin/setup-postgres
 
 # for i in $(seq 1 60); do
 #  if runuser -u postgres -- /usr/lib/postgresql/16/bin/pg_isready -q; then
@@ -156,32 +164,12 @@ echo "[wait] Waiting for PostgreSQL..."
 #  sleep 1
 # done
 
-# Create CMS DB, user and privileges if missing
-CMS_DB_NAME="${CMS_DB_NAME:-cmsdb}"
-CMS_DB_USER="${CMS_DB_USER:-cmsuser}"
-CMS_DB_PASS="${CMS_DB_PASS:-cmspassword}"
-
-if ! runuser -u postgres -- psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='${CMS_DB_USER}'" | grep -q 1; then
-  echo "[db] Creating role ${CMS_DB_USER}..."
-  runuser -u postgres -- psql -v ON_ERROR_STOP=1 -c "CREATE ROLE ${CMS_DB_USER} LOGIN PASSWORD '${CMS_DB_PASS}';"
-fi
-
-if ! runuser -u postgres -- psql -tAc "SELECT 1 FROM pg_database WHERE datname='${CMS_DB_NAME}'" | grep -q 1; then
-  echo "[db] Creating database ${CMS_DB_NAME} owned by ${CMS_DB_USER}..."
-  runuser -u postgres -- createdb --owner="${CMS_DB_USER}" "${CMS_DB_NAME}"
-fi
-
-echo "[db] Applying required grants..."
-runuser -u postgres -- psql -d "${CMS_DB_NAME}" -v ON_ERROR_STOP=1 \
-  -c "ALTER SCHEMA public OWNER TO ${CMS_DB_USER};" \
-  -c "GRANT SELECT ON pg_largeobject TO ${CMS_DB_USER};"
+# DB/user/grants are ensured by setup-postgres above
 
 # Prepare CMS configuration if not present
 CMS_INSTALL_DIR="${CMS_INSTALL_DIR:-/opt/cms/install}"
 CMS_ETC="${CMS_INSTALL_DIR}/etc"
 mkdir -p "${CMS_ETC}"
-
-CMS_DB_URL="postgresql://${CMS_DB_USER}:${CMS_DB_PASS}@localhost/${CMS_DB_NAME}"
 
 if [ ! -f "${CMS_ETC}/cms.toml" ]; then
   echo "[cfg] Writing ${CMS_ETC}/cms.toml..."
@@ -210,23 +198,14 @@ if ! psql "${CMS_DB_URL}" -tAc "SELECT 1 FROM information_schema.tables WHERE ta
   cmsInitDB
 fi
 
-# Start CMS services
-echo "[run] Starting cmsLogService and cmsResourceService under supervisor..."
-supervisorctl start cms_log || true
-supervisorctl start cms_resource || true
-
-# Stop the temporary Postgres (supervisor will manage it later)
-/usr/lib/postgresql/16/bin/pg_ctl -D "${PGDATA}" -m fast -w stop
-
 echo ""
 echo "Admin UI:    http://localhost:8889/  (create an admin with: cmsAddAdmin <name>)"
 echo "Contest UI:  http://localhost:8888/"
 echo ""
 
-setup-postgres
-
 # Keep the container in the foreground by re-attaching to supervisord
 # Run supervisord in the foreground so the container stays up
+touch "${INIT_MARKER}"
 exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
 SCRIPT
 chmod +x /usr/local/bin/start-cms

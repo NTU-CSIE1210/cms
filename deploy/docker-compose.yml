@@ -20,7 +20,8 @@ services:
       - CMS_DB_NAME=cmsdb
       - CMS_DB_USER=cmsuser
       - CMS_DB_PASS=TBxwHoAktAktEleLW
-    command: ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+    # Run the image's init script so Postgres is initialized and CMS is set up
+    command: ["/usr/local/bin/start-cms"]
 volumes:
   cms_pg_exam1:
   cms_install_exam1:

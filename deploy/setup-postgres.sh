@@ -29,11 +29,15 @@ stopasgroup=true
 killasgroup=true
 EOF
 
-supervisorctl reread
-supervisorctl update
-supervisorctl restart postgres || supervisorctl start postgres
-sleep 2
-supervisorctl status postgres
+if supervisorctl status >/dev/null 2>&1; then
+  supervisorctl reread || true
+  supervisorctl update || true
+  supervisorctl restart postgres || supervisorctl start postgres || true
+  sleep 2
+  supervisorctl status postgres || true
+else
+  echo "[warn] supervisord not running yet; proceeding without supervisorctl"
+fi
 runuser -u postgres -- $BIN/pg_isready || true
 
 BIN=/usr/lib/postgresql/16/bin
