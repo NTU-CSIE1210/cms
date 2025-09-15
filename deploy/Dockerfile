@@ -60,6 +60,9 @@ RUN echo "source ${CMS_INSTALL_DIR}/bin/activate" >> /home/${CMS_USER}/.profile
 # 5) Prepare default config directory and logs
 RUN mkdir -p ${CMS_INSTALL_DIR}/etc ${CMS_INSTALL_DIR}/var/log
 
+# Create log directory for CMS services and hand it to cmsuser
+RUN mkdir -p /var/local/log && chown -R ${CMS_USER}:${CMS_USER} /var/local
+
 # 6) Back to root for DB setup, supervisor & entrypoint wiring
 USER root
 
