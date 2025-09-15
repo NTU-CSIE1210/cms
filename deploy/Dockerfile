@@ -60,11 +60,11 @@ RUN echo "source ${CMS_INSTALL_DIR}/bin/activate" >> /home/${CMS_USER}/.profile
 # 5) Prepare default config directory and logs
 RUN mkdir -p ${CMS_INSTALL_DIR}/etc ${CMS_INSTALL_DIR}/var/log
 
-# Create log directory for CMS services and hand it to cmsuser
-RUN mkdir -p /var/local/log && chown -R ${CMS_USER}:${CMS_USER} /var/local
-
 # 6) Back to root for DB setup, supervisor & entrypoint wiring
 USER root
+
+# Create log directory for CMS services (cms writes to /var/local/log/cms)
+RUN mkdir -p /var/local/log/cms && chown -R ${CMS_USER}:${CMS_USER} /var/local/log
 
 # 6a) Prepare PostgreSQL data directory (owned by postgres)
 RUN mkdir -p ${PGDATA} && chown -R postgres:postgres ${PGDATA}
