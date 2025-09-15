@@ -15,11 +15,11 @@ services:
       - cms_pg_exam1:/var/lib/postgresql/data
       - cms_install_exam1:/opt/cms/install
     environment:
-      - TZ="Asia/Taipei"
+      - TZ=Asia/Taipei
       - SRC_DIR=/home/cmsuser/src
       - CMS_DB_NAME=cmsdb
       - CMS_DB_USER=cmsuser
-      - CMS_DB_PASS='TBxwHoAktAktEleLW'
+      - CMS_DB_PASS=TBxwHoAktAktEleLW
     command: ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
 volumes:
   cms_pg_exam1:
