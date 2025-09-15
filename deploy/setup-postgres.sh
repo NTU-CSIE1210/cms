@@ -51,12 +51,12 @@ runuser -u postgres -- $BIN/pg_ctl -D "$DATA" status || \
   runuser -u postgres -- $BIN/pg_ctl -D "$DATA" -l "$DATA/logfile" -w start
 
 # Role
-if ! runuser -u postgres -- psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='\''$DBUSER'\''" | grep -q 1; then
-  runuser -u postgres -- psql -v ON_ERROR_STOP=1 -c "CREATE ROLE $DBUSER LOGIN PASSWORD '\''$DBPASS'\'';"
+if ! runuser -u postgres -- psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$DBUSER'" | grep -q 1; then
+  runuser -u postgres -- psql -v ON_ERROR_STOP=1 -c "CREATE ROLE $DBUSER LOGIN PASSWORD '$DBPASS';"
 fi
 
 # Database
-if ! runuser -u postgres -- psql -tAc "SELECT 1 FROM pg_database WHERE datname='\''$DBNAME'\''" | grep -q 1; then
+if ! runuser -u postgres -- psql -tAc "SELECT 1 FROM pg_database WHERE datname='$DBNAME'" | grep -q 1; then
   runuser -u postgres -- createdb --owner="$DBUSER" "$DBNAME"
 fi
 
