@@ -73,10 +73,10 @@ RUN mkdir -p /etc/supervisor/conf.d
 RUN <<'EOF'
 cat >/etc/supervisor/conf.d/postgres.conf <<'CFG'
 [program:postgres]
-command=/bin/bash -lc "/usr/lib/postgresql/16/bin/pg_ctl -D ${PGDATA} -o \"-c listen_addresses=localhost\" -w start && tail -f /dev/null"
+command=/usr/lib/postgresql/16/bin/postgres -D /var/lib/postgresql/data -c listen_addresses=localhost
 user=postgres
 autostart=true
-autorestart=false
+autorestart=true
 stdout_logfile=/var/log/supervisor/postgres.out.log
 stderr_logfile=/var/log/supervisor/postgres.err.log
 stopsignal=QUIT
@@ -92,9 +92,9 @@ cat >/etc/supervisor/conf.d/cms_log.conf <<'CFG'
 command=/opt/cms/install/bin/python /home/cmsuser/src/scripts/cmsLogService 0
 user=cmsuser
 directory=/home/cmsuser
-environment=HOME="/home/cmsuser",USER="cmsuser",HOSTNAME="localhost",CMS_CONFIG_FILE="/etc/cms.conf",PATH="${CMS_INSTALL_DIR}/bin:/usr/bin:/bin"
+environment=HOME="/home/cmsuser",USER="cmsuser",HOSTNAME="localhost",CMS_CONFIG_FILE="/etc/cms.conf",PATH="/opt/cms/install/bin:/usr/bin:/bin"
 autostart=true
-autorestart=false
+autorestart=true
 stdout_logfile=/var/log/supervisor/cms_log.out.log
 stderr_logfile=/var/log/supervisor/cms_log.err.log
 CFG
@@ -109,7 +109,7 @@ user=cmsuser
 directory=/home/cmsuser
 autostart=true
 autorestart=true
-environment=HOME="/home/cmsuser",USER="cmsuser",HOSTNAME="localhost",CMS_CONFIG_FILE="/etc/cms.conf",PATH="${CMS_INSTALL_DIR}/bin:/usr/bin:/bin"
+environment=HOME="/home/cmsuser",USER="cmsuser",HOSTNAME="localhost",CMS_CONFIG_FILE="/etc/cms.conf",PATH="/opt/cms/install/bin:/usr/bin:/bin"
 stdout_logfile=/var/log/supervisor/cms_resource.out.log
 stderr_logfile=/var/log/supervisor/cms_resource.err.log
 CFG
@@ -205,6 +205,8 @@ echo ""
 
 # Keep the container in the foreground by re-attaching to supervisord
 # Run supervisord in the foreground so the container stays up
+# Stop any temporary postgres instance started during setup to avoid port conflicts
+runuser -u postgres -- /usr/lib/postgresql/16/bin/pg_ctl -D "${PGDATA}" -m fast -w stop || true
 touch "${INIT_MARKER}"
 exec /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
 SCRIPT
