@@ -229,7 +229,7 @@ class SandboxBase(metaclass=ABCMeta):
         """
         if multiprocess:
             # Max processes is set to 1000 to limit the effect of fork bombs.
-            self.max_processes = 1000
+            self.max_processes = 10 #tmt: 10
         else:
             self.max_processes = 1
 

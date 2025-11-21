@@ -166,6 +166,7 @@ setup(
             "cmsTelegramBot=cmscontrib.TelegramBot:main",
         ],
         "cms.grading.tasktypes": [
+						"TestCasesAreScripts=cms.grading.tasktypes.TestCasesAreScripts:TestCasesAreScripts",
             "Batch=cms.grading.tasktypes.Batch:Batch",
             "Communication=cms.grading.tasktypes.Communication:Communication",
             "OutputOnly=cms.grading.tasktypes.OutputOnly:OutputOnly",
