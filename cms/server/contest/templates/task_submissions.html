@@ -256,7 +256,7 @@ $(document).ready(function () {
                     </div>
                 </div>
 {% endfor %}
-{% if task.submission_format|any("endswith", ".%l") %}
+{% if ((task.active_dataset is not none) and (task.active_dataset.task_type != "OutputOnly")) or task.submission_format|any("endswith", ".%l")  %}
                 <div class="control-group">
                     <div class="controls">
                         <select name="language">

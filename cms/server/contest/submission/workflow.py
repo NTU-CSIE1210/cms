@@ -144,7 +144,8 @@ def accept_submission(sql_session, file_cacher, participation, task, timestamp,
     except InvalidFilesOrLanguage:
         raise UnacceptableSubmission(
             N_("Invalid submission format!"),
-            N_("Please select the correct files."))
+            N_("Please select the correct files."),
+            N_(str(received_files) + str(language_name) + str(required_codenames)))
 
     digests = dict()
     missing_codenames = required_codenames.difference(files.keys())

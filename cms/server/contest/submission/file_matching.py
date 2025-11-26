@@ -219,15 +219,15 @@ def match_files_and_language(given_files, given_language_name,
     # If the submission format is language-agnostic the only "language"
     # that makes sense is None, and if the caller thought differently we
     # let them know.
-    if not any(element.endswith(".%l") for element in submission_format):
-        if given_language_name is not None:
-            raise InvalidFilesOrLanguage(
-                "a language %r is given when not needed" % given_language_name)
-        candidate_languages = {None}
+    # if not any(element.endswith(".%l") for element in submission_format):
+    #    if given_language_name is not None:
+    #        raise InvalidFilesOrLanguage(
+    #            "a language %r is given when not needed" % given_language_name)
+    #    candidate_languages = {None}
 
     # If a language is required and the caller told us which one to use
     # we follow their indication, provided it exists and is allowed.
-    elif given_language_name is not None:
+    if given_language_name is not None:
         try:
             language = get_language(given_language_name)
         except KeyError:

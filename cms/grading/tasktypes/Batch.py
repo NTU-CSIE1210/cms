@@ -268,6 +268,10 @@ class Batch(TaskType):
         files_to_get = {
             self._actual_input: job.input
         }
+        # Any other useful manager (just copy).
+        for filename, manager in job.managers.items():
+            if not filename.startswith('grader'):
+                files_to_get[filename] = manager.digest
 
         # Check which redirect we need to perform, and in case we don't
         # manage the output via redirect, the submission needs to be able
