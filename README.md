@@ -1,6 +1,12 @@
 Contest Management System
 =========================
 
+> **NTU CSIE1210 fork.** This fork hosts CMS for `cprog.csie.org`. For how the
+> server is set up and how to develop and deploy against it, see
+> [`docs/csie/INFRASTRUCTURE.md`](docs/csie/INFRASTRUCTURE.md) and
+> [`docs/csie/DEPLOY.md`](docs/csie/DEPLOY.md). Everything below this notice is
+> upstream's own README.
+
 Homepage: <http://cms-dev.github.io/>
 
 [![Build Status](https://github.com/cms-dev/cms/actions/workflows/main.yml/badge.svg)](https://github.com/cms-dev/cms/actions)
