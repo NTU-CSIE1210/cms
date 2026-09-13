@@ -47,8 +47,8 @@ def format_token_rules(
     n_ = translation.ngettext
 
     if t_type == "contest":
-        tokens["type_s"] = _("contest-token")
-        tokens["type_pl"] = _("contest-tokens")
+        tokens["type_s"] = _("exam-token")
+        tokens["type_pl"] = _("exam-tokens")
     elif t_type == "task":
         tokens["type_s"] = _("task-token")
         tokens["type_pl"] = _("task-tokens")
