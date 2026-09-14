@@ -43,8 +43,8 @@ except:
 
 import tornado.web
 
-from cms.db import Contest, Group, Message, Participation, Submission, User, \
-    Team
+from cms.db import Contest, Group, Message, Participation, Submission, Token, \
+    User, Team
 from cmscommon.datetime import make_datetime
 from .base import BaseHandler, require_permission
 
@@ -207,6 +207,13 @@ class ParticipationHandler(BaseHandler):
 
         self.r_params["participation"] = participation
         self.r_params["selected_user"] = participation.user
+        self.r_params["token_history"] = (
+            self.sql_session.query(Token)
+            .join(Submission)
+            .filter(Submission.participation == participation)
+            .order_by(Token.timestamp)
+            .all()
+        )
         self.r_params["teams"] = self.sql_session.query(Team).all()
         self.render("participation.html", **self.r_params)
 
@@ -236,6 +243,12 @@ class ParticipationHandler(BaseHandler):
             self.get_datetime(attrs, "starting_time")
             self.get_timedelta_sec(attrs, "delay_time")
             self.get_timedelta_sec(attrs, "extra_time")
+            self.get_int(attrs, "token_max_number")
+            self.get_timedelta_sec(attrs, "token_min_interval")
+            self.get_int(attrs, "token_gen_initial")
+            self.get_int(attrs, "token_gen_number")
+            self.get_timedelta_min(attrs, "token_gen_interval")
+            self.get_int(attrs, "token_gen_max")
             self.get_bool(attrs, "hidden")
             self.get_bool(attrs, "unrestricted")
 

@@ -257,11 +257,17 @@ def tokens_available(
     else:
         start = participation.group.start
 
+    # The participation may override any of the contest's token amount
+    # parameters (None means "inherit the contest's value").
+    def _p(field: str):
+        override = getattr(participation, field)
+        return override if override is not None else getattr(contest, field)
+
     # Compute separately for contest and task.
     res_contest = _tokens_available(
-        contest.token_mode, contest.token_gen_initial, contest.token_gen_number,
-        contest.token_gen_interval, contest.token_gen_max,
-        contest.token_max_number, contest.token_min_interval, start,
+        contest.token_mode, _p("token_gen_initial"), _p("token_gen_number"),
+        _p("token_gen_interval"), _p("token_gen_max"),
+        _p("token_max_number"), _p("token_min_interval"), start,
         contest_history, timestamp)
     res_task = _tokens_available(
         task.token_mode, task.token_gen_initial, task.token_gen_number,

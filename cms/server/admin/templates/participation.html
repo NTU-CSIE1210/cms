@@ -125,10 +125,77 @@
         </td>
         <td><input type="text" name="extra_time" value="{{ participation.extra_time.total_seconds()|int }}"></td>
       </tr>
+      <tr><td colspan=2><h3>Token overrides (leave blank to use the contest's setting)</h3></td></tr>
+      <tr>
+        <td>
+          <span class="info" title="Overrides the contest's maximum number of tokens for this contestant only. Leave blank to use the contest's value."></span>
+          Maximum number of tokens
+        </td>
+        <td><input type="text" name="token_max_number" value="{{ participation.token_max_number if participation.token_max_number is not none else "" }}" size="3"></td>
+      </tr>
+      <tr>
+        <td>
+          <span class="info" title="Overrides the contest's minimum interval (in seconds) between two token uses for this contestant only. Leave blank to use the contest's value."></span>
+          Minimum interval between tokens
+        </td>
+        <td><input type="text" name="token_min_interval" value="{{ participation.token_min_interval.total_seconds()|int if participation.token_min_interval is not none else "" }}" size="3"></td>
+      </tr>
+      <tr>
+        <td>
+          <span class="info" title="Overrides the contest's initial number of tokens for this contestant only. Leave blank to use the contest's value."></span>
+          Initial number of tokens
+        </td>
+        <td><input type="text" name="token_gen_initial" value="{{ participation.token_gen_initial if participation.token_gen_initial is not none else "" }}" size="3"></td>
+      </tr>
+      <tr>
+        <td>
+          <span class="info" title="Overrides the contest's token generation number for this contestant only. Leave blank to use the contest's value."></span>
+          Token generation number
+        </td>
+        <td><input type="text" name="token_gen_number" value="{{ participation.token_gen_number if participation.token_gen_number is not none else "" }}" size="3"></td>
+      </tr>
+      <tr>
+        <td>
+          <span class="info" title="Overrides the contest's token generation period (in minutes) for this contestant only. Leave blank to use the contest's value."></span>
+          Token generation period
+        </td>
+        <td><input type="text" name="token_gen_interval" value="{{ (participation.token_gen_interval.total_seconds()|int // 60) if participation.token_gen_interval is not none else "" }}" size="3"></td>
+      </tr>
+      <tr>
+        <td>
+          <span class="info" title="Overrides the contest's maximum accumulated tokens for this contestant only. Leave blank to use the contest's value."></span>
+          Maximum accumulated tokens
+        </td>
+        <td><input type="text" name="token_gen_max" value="{{ participation.token_gen_max if participation.token_gen_max is not none else "" }}" size="3"></td>
+      </tr>
     </table>
     <input type="submit" value="Update" />
     <input type="reset" value="Reset" />
   </form>
+  <div class="hr"></div>
+</div>
+
+
+<h2 id="title_token_history" class="toggling_on">Token usage history</h2>
+<div id="token_history">
+  {% if token_history == [] %}
+  <p>No tokens used yet.</p>
+  {% else %}
+  <table class="bordered">
+    <tr>
+      <th>Time</th>
+      <th>Task</th>
+      <th>Submission</th>
+    </tr>
+    {% for token in token_history %}
+    <tr>
+      <td>{{ token.timestamp }}</td>
+      <td>{{ token.submission.task.name }}</td>
+      <td><a href="{{ url("submission", token.submission.id) }}">{{ token.submission.id }}</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% endif %}
   <div class="hr"></div>
 </div>
 

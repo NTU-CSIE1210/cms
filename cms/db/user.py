@@ -290,6 +290,42 @@ class Participation(Base):
         nullable=False,
         default=timedelta())
 
+    # Per-user overrides of the contest's token parameters (see Contest
+    # for the meaning of each). None means "inherit the contest's value"
+    # for every field below.
+    #
+    # Caveat: on Contest, None on token_max_number/token_gen_max means
+    # "no cap" (a valid, meaningful value), so that same value can't
+    # also be used here to mean "not overridden, inherit the contest's
+    # value" without ambiguity. As a result, a participation cannot be
+    # overridden to have an uncapped token_max_number/token_gen_max
+    # while the contest itself has a cap; it can only be overridden to
+    # a specific finite number. This is an accepted limitation.
+    token_max_number: int | None = Column(
+        Integer,
+        CheckConstraint("token_max_number > 0"),
+        nullable=True)
+    token_min_interval: timedelta | None = Column(
+        Interval,
+        CheckConstraint("token_min_interval >= '0 seconds'"),
+        nullable=True)
+    token_gen_initial: int | None = Column(
+        Integer,
+        CheckConstraint("token_gen_initial >= 0"),
+        nullable=True)
+    token_gen_number: int | None = Column(
+        Integer,
+        CheckConstraint("token_gen_number >= 0"),
+        nullable=True)
+    token_gen_interval: timedelta | None = Column(
+        Interval,
+        CheckConstraint("token_gen_interval > '0 seconds'"),
+        nullable=True)
+    token_gen_max: int | None = Column(
+        Integer,
+        CheckConstraint("token_gen_max > 0"),
+        nullable=True)
+
     # Contest-specific password. If this password is not null then the
     # traditional user.password field will be "replaced" by this field's
     # value (only for this participation).
