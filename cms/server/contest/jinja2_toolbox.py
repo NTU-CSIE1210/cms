@@ -30,8 +30,28 @@ from .formatting import format_token_rules, get_score_class
 
 
 def extract_token_params(o):
-    return {k[6:]: v
-            for k, v in o.__dict__.items() if k.startswith("token_")}
+    """Extract token parameters from a Contest, Task, or Participation object.
+
+    If the object is a Participation, per-participation overrides are
+    applied (non-None values from the participation take precedence over
+    the contest's defaults).
+
+    """
+    # Check if this is a Participation (has contest attribute).
+    if hasattr(o, 'contest'):
+        participation = o
+        contest = participation.contest
+        result = {}
+        for k, v in contest.__dict__.items():
+            if k.startswith("token_"):
+                # Use participation override if not None, otherwise use contest value.
+                override = getattr(participation, k, None)
+                result[k[6:]] = override if override is not None else v
+        return result
+    else:
+        # For Contest or Task objects, directly extract token parameters.
+        return {k[6:]: v
+                for k, v in o.__dict__.items() if k.startswith("token_")}
 
 
 def instrument_cms_toolbox(env):

@@ -97,7 +97,7 @@
     {% elif tokens_tasks == TOKEN_MODE_INFINITE %}
         <p>
         {% trans %}You have a set of tokens shared among all tasks.{% endtrans %}
-        {{ contest|extract_token_params|format_token_rules }}
+        {{ participation|extract_token_params|format_token_rules }}
         </p>
 
         <p>
@@ -107,7 +107,7 @@
     {% else %}
         <p>
         {% trans %}You have two types of tokens: a set of <em>exam-tokens</em> shared among all tasks and a distinct set of <em>task-tokens</em> for each task.{% endtrans %}
-        {{ contest|extract_token_params|format_token_rules(t_type="contest") }}
+        {{ participation|extract_token_params|format_token_rules(t_type="contest") }}
         {% trans type_pl=_("task-tokens") %}You can find the rules for the {{ type_pl }} on each task's description page.{% endtrans %}
         </p>
 
