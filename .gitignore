@@ -16,3 +16,7 @@ log/
 codecov/
 .dev/
 test_logs/
+
+# CSIE: Student data
+contest.yaml
+credentials.csv
