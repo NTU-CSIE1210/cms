@@ -58,9 +58,11 @@ class UserImporter:
 
     """
 
-    def __init__(self, path: str, contest_id: int, loader_class: type[UserLoader]):
+    def __init__(self, path: str, contest_id: int, loader_class: type[UserLoader],
+                 update_password: bool = False):
         self.file_cacher = FileCacher()
         self.contest_id = contest_id
+        self.update_password = update_password
         self.loader = loader_class(os.path.abspath(path), self.file_cacher)
 
     def do_import(self):
@@ -76,7 +78,7 @@ class UserImporter:
         with SessionGen() as session:
             try:
                 contest = contest_from_db(self.contest_id, session)
-                user = self._user_to_db(session, user)
+                user = self._user_to_db(session, user, self.update_password)
             except ImportDataError as e:
                 logger.error(str(e))
                 logger.info("Error while importing, no changes were made.")
@@ -107,26 +109,32 @@ class UserImporter:
             importer = UserImporter(
                 path=user_path,
                 contest_id=self.contest_id,
-                loader_class=get_loader(user_path)
+                loader_class=get_loader(user_path),
+                update_password=self.update_password
             )
             importer.do_import()
 
         return True
 
     @staticmethod
-    def _user_to_db(session: Session, user: User) -> User:
-        """Add the user to the DB
+    def _user_to_db(session: Session, user: User, update_password: bool = False) -> User:
+        """Add the user to the DB, or update password if user exists and update_password is True.
 
         Return the user again, or raise in case a user with the same username
-        was already present in the DB.
+        was already present in the DB and update_password is False.
 
         """
         old_user: User | None = (
             session.query(User).filter(User.username == user.username).first()
         )
         if old_user is not None:
-            raise ImportDataError(
-                "User \"%s\" already exists." % user.username)
+            if update_password:
+                logger.info("User \"%s\" already exists, updating password.", user.username)
+                old_user.password = user.password
+                return old_user
+            else:
+                raise ImportDataError(
+                    "User \"%s\" already exists." % user.username)
         session.add(user)
         return user
 
@@ -163,6 +171,11 @@ def main():
         action="store", type=int,
         help="id of the contest the users will be attached to"
     )
+    parser.add_argument(
+        "--update-password",
+        action="store_true",
+        help="update password for existing users instead of raising error"
+    )
 
     args = parser.parse_args()
 
@@ -172,7 +185,8 @@ def main():
     importer = UserImporter(
         path=args.target,
         contest_id=args.contest_id,
-        loader_class=get_loader(args.target)
+        loader_class=get_loader(args.target),
+        update_password=args.update_password
     )
 
     if args.all:

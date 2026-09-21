@@ -57,6 +57,16 @@ python3 /srv/cms-src/scripts/csie/add_users_to_contest.py <contest_id> ~/student
 | 產生帳密 | `/srv/cms-src/scripts/csie/generate_users.py` |
 | 加入比賽 | `/srv/cms-src/scripts/csie/add_users_to_contest.py` |
 
+## 重設密碼
+
+若要批量更新所有學生密碼，重新執行上述「初次匯入」流程，並在 `cmsImportUser` 加上 `--update-password` 參數：
+
+```bash
+cmsImportUser -A --update-password ~/students/
+```
+
+已存在的使用者會更新密碼，新使用者則會被建立。
+
 ## 其他說明
 
 - `contest.yaml` 和 `credentials.csv` 含敏感資料，已在 `.gitignore` 排除
