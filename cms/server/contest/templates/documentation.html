@@ -14,6 +14,7 @@
 {% for name, ext in language_docs %}
 <h3>{{name}}</h3>
 <p><a href="{{ url("docs", ext, "index.html") }}">{% trans %}Documentation{% endtrans %}</a></p>
+<p><a href="{{ url("docs", "search.html") }}">{% trans %}Search{% endtrans %}</a></p>
 {% endfor %}
 
 {% if contest.languages|map("to_language")|map(attribute="source_extensions")|any("contains", ".java") %}
@@ -21,6 +22,9 @@
 
 <p>{% trans %}The main Java class of the solution should have exactly the same name as the task.{% endtrans %}</p>
 {% endif %}
+
+<h2>{% trans %}Dictionary{% endtrans %}</h2>
+<p><a href="/dictionary/index.html" target="_blank">{% trans %}Offline English-Chinese dictionary{% endtrans %}</a></p>
 
 
 <h2>{% trans %}Submission details for compilation{% endtrans %}</h2>
