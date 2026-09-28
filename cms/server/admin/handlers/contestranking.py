@@ -45,6 +45,10 @@ class RankingHandler(BaseHandler):
         # This validates the contest id.
         self.safe_get_item(Contest, contest_id)
 
+        # Check if we should include unofficial submissions
+        mode = self.get_query_argument("mode", "official")
+        include_unofficial = (mode == "unofficial")
+
         # This massive joined load gets all the information which we will need
         # to generating the rankings.
         self.contest: Contest = (
@@ -66,7 +70,7 @@ class RankingHandler(BaseHandler):
             total_score = 0.0
             partial = False
             for task in self.contest.tasks:
-                t_score, t_partial = task_score(p, task)
+                t_score, t_partial = task_score(p, task, include_unofficial=include_unofficial)
                 p.scores.append((t_score, t_partial))
                 total_score += t_score
                 partial = partial or t_partial
@@ -75,6 +79,7 @@ class RankingHandler(BaseHandler):
 
         self.r_params = self.render_params()
         self.r_params["show_teams"] = show_teams
+        self.r_params["ranking_mode"] = mode
         if format == "txt":
             self.set_header("Content-Type", "text/plain")
             self.set_header("Content-Disposition",

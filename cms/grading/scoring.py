@@ -108,6 +108,7 @@ def task_score(
     task: Task,
     public: bool = False,
     only_tokened: bool = False,
+    include_unofficial: bool = False,
 ) -> tuple[float, bool]:
     """Return the score of a contest's user on a task.
 
@@ -121,6 +122,8 @@ def task_score(
         at the results of tokened submissions (that is, the score that the user
         would obtain if all non-tokened submissions scored 0.0, or equivalently
         had not been scored yet).
+    include_unofficial: if True, include unofficial submissions in the score
+        calculation (useful for post-contest analysis mode).
 
     return: the score of user on task, and True if not
         all submissions of the participation in the task have been scored.
@@ -141,7 +144,7 @@ def task_score(
             "scores regardless of token status.")
 
     submissions = [s for s in participation.submissions
-                   if s.task is task and s.official]
+                   if s.task is task and (s.official or include_unofficial)]
     if len(submissions) == 0:
         return 0.0, False
 

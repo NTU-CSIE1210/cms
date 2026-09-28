@@ -2,9 +2,21 @@
 
 {% block core %}
 <div class="core_title">
-  <h1>Ranking</h1>
+  <h1>{% if ranking_mode == "unofficial" %}Unofficial {% endif %}Ranking</h1>
 </div>
-Download as <a href="{{ url("contest", contest.id, "ranking", "csv") }}">csv</a>, <a href="{{ url("contest", contest.id, "ranking", "txt") }}">text</a>.
+<p>
+  Mode:
+  {% if ranking_mode == "official" %}
+    <strong>Official</strong> | <a href="{{ url("contest", contest.id, "ranking") }}?mode=unofficial">Unofficial</a>
+  {% else %}
+    <a href="{{ url("contest", contest.id, "ranking") }}">Official</a> | <strong>Unofficial</strong>
+  {% endif %}
+</p>
+<p>
+Download as
+<a href="{{ url("contest", contest.id, "ranking", "csv") }}{% if ranking_mode == "unofficial" %}?mode=unofficial{% endif %}">csv</a>,
+<a href="{{ url("contest", contest.id, "ranking", "txt") }}{% if ranking_mode == "unofficial" %}?mode=unofficial{% endif %}">text</a>.
+</p>
 <table id="ranking-table" class="bordered">
   <thead>
     <tr>
