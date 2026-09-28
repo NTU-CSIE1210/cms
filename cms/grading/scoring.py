@@ -170,7 +170,11 @@ def task_score(
             score, score_details = sr.score, sr.score_details
         score_details_tokened.append((score, score_details, s.tokened()))
 
-    if task.score_mode == SCORE_MODE_MAX:
+    # When including unofficial submissions, always use MAX mode to get
+    # the best score across all attempts, regardless of token usage.
+    if include_unofficial:
+        score = _task_score_max(score_details_tokened)
+    elif task.score_mode == SCORE_MODE_MAX:
         score = _task_score_max(score_details_tokened)
     elif task.score_mode == SCORE_MODE_MAX_SUBTASK:
         score = _task_score_max_subtask(score_details_tokened)
