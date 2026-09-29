@@ -104,6 +104,13 @@ def _tokens_available(
     if mode == TOKEN_MODE_INFINITE:
         return -1, None, None
 
+    # In a USACO-like contest, start is None until the user clicks
+    # "start"; an unrestricted participation can still reach this code
+    # before doing so (it bypasses the actual-phase check), and there is
+    # no timeline to compute tokens against yet.
+    if start is None:
+        return 0, None, None
+
     # avail is the current number of available tokens. We are going to
     # rebuild all the history to know how many of them there are now.
     # We start with the initial number (it's already capped to max by
