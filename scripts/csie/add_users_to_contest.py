@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Add users from YAML to a contest, optionally with bonus tokens"""
-import sys
-import subprocess
-import yaml
-import csv
 import argparse
+import csv
+import subprocess
+import sys
+
+import yaml
 
 parser = argparse.ArgumentParser(description="Add users to a contest")
-parser.add_argument("contest_id", help="Contest ID")
+parser.add_argument("contest_id", type=int, help="Contest ID")
 parser.add_argument("yaml_file", help="Path to contest.yaml")
 parser.add_argument("--bonus-tokens", help="CSV file with bonus tokens (id,midterm_tokens,...)")
 parser.add_argument("--base-tokens", type=int, default=10, help="Base token count (default: 10)")

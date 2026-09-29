@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Generate CMS users from NTU Cool student list CSV"""
+import argparse
 import csv
 import secrets
+
 import yaml
-import sys
 from xkcdpass import xkcd_password as xp
 
 def generate_password():
@@ -23,11 +24,11 @@ def parse_name(full_name):
         return full_name.split('(')[0].strip()
     return full_name.strip()
 
-if len(sys.argv) != 2:
-    print("Usage: generate_users.py <student_csv>")
-    sys.exit(1)
+parser = argparse.ArgumentParser(description="Generate CMS users from NTU Cool student list CSV")
+parser.add_argument("student_csv", help="Path to student CSV file from NTU Cool")
 
-csv_file = sys.argv[1]
+args = parser.parse_args()
+csv_file = args.student_csv
 users = []
 credentials = []
 

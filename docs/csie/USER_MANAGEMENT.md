@@ -76,12 +76,33 @@ b12345679,3
 - CSV 中沒有的學生：已在比賽中會跳過，不在比賽中會新增
 - 不使用 `--bonus-tokens` 時：所有已在比賽中的學生都會被跳過
 
+## 匯出 token 使用統計
+
+比賽結束後，如果想統計學生使用了多少額外 token，可使用：
+
+```bash
+python3 /srv/cms-src/scripts/csie/export_token_usage.py <contest_id> \
+    ~/students/contest.yaml \
+    --base-tokens 10 \
+    --output token_usage.csv
+```
+
+輸出 CSV 格式：
+```csv
+id,bonus_tokens_used
+b12345678,3
+b12345679,0
+```
+
+統計邏輯：`bonus_tokens_used = max(0, 實際使用總數 - base_tokens)`
+
 ## 腳本位置
 
 | 腳本 | 路徑 |
 |------|------|
 | 產生帳密 | `/srv/cms-src/scripts/csie/generate_users.py` |
 | 加入比賽 | `/srv/cms-src/scripts/csie/add_users_to_contest.py` |
+| 匯出 token 統計 | `/srv/cms-src/scripts/csie/export_token_usage.py` |
 
 ## 重設密碼
 
