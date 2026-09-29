@@ -48,7 +48,33 @@ sudo -u cmsuser -i
 python3 /srv/cms-src/scripts/csie/add_users_to_contest.py <contest_id> ~/students/contest.yaml
 ```
 
-腳本會自動跳過已在比賽中的學生。
+### 設定額外 token（選用）
+
+如果需要根據學生表現給予額外 token，可使用 `--bonus-tokens` 參數：
+
+```bash
+python3 /srv/cms-src/scripts/csie/add_users_to_contest.py <contest_id> \
+    ~/students/contest.yaml \
+    --bonus-tokens ~/bonus_tokens.csv \
+    --base-tokens 10
+```
+
+CSV 格式（欄位名稱包含 "token" 或 "bonus" 即可）：
+```csv
+id,midterm_tokens
+b12345678,5
+b12345679,3
+```
+
+最終 token 數 = `base_tokens` + CSV 中的 bonus
+- 範例：base=10, bonus=5 → 該學生獲得 15 個 token
+- CSV 中未列出的學生使用 contest 預設值
+- `--base-tokens` 預設為 10
+
+**注意**：
+- CSV 中有的學生：已在比賽中會更新 token，不在比賽中會新增
+- CSV 中沒有的學生：已在比賽中會跳過，不在比賽中會新增
+- 不使用 `--bonus-tokens` 時：所有已在比賽中的學生都會被跳過
 
 ## 腳本位置
 

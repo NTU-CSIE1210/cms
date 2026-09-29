@@ -59,7 +59,14 @@ def add_participation(
     team_code: str | None,
     hidden: bool,
     unrestricted: bool,
-    groupname: str
+    groupname: str,
+    token_gen_initial: int | None = None,
+    token_max_number: int | None = None,
+    token_gen_number: int | None = None,
+    token_gen_interval: int | None = None,
+    token_gen_max: int | None = None,
+    token_min_interval: int | None = None,
+    update: bool = False,
 ):
     logger.info("Creating the user's participation in the database.")
     delay_time = delay_time if delay_time is not None else 0
@@ -112,14 +119,54 @@ def add_participation(
                 password=password,
                 team=team,
                 hidden=hidden,
-                unrestricted=unrestricted)
+                unrestricted=unrestricted,
+                token_gen_initial=token_gen_initial,
+                token_max_number=token_max_number,
+                token_gen_number=token_gen_number,
+                token_gen_interval=datetime.timedelta(seconds=token_gen_interval) if token_gen_interval is not None else None,
+                token_gen_max=token_gen_max,
+                token_min_interval=datetime.timedelta(seconds=token_min_interval) if token_min_interval is not None else None,
+            )
 
             session.add(participation)
             session.commit()
     except IntegrityError:
-        logger.error("A participation for this user in this contest "
-                     "already exists.")
-        return False
+        if update:
+            logger.info("Participation already exists, updating token settings.")
+            with SessionGen() as session:
+                user = session.query(User).filter(User.username == username).first()
+                contest = Contest.get_from_id(contest_id, session)
+                participation = (
+                    session.query(Participation)
+                    .filter(Participation.user == user)
+                    .filter(Participation.contest == contest)
+                    .first()
+                )
+                if participation is None:
+                    logger.error("Failed to find existing participation for update.")
+                    return False
+
+                # Update token settings if provided
+                if token_gen_initial is not None:
+                    participation.token_gen_initial = token_gen_initial
+                if token_max_number is not None:
+                    participation.token_max_number = token_max_number
+                if token_gen_number is not None:
+                    participation.token_gen_number = token_gen_number
+                if token_gen_interval is not None:
+                    participation.token_gen_interval = datetime.timedelta(seconds=token_gen_interval)
+                if token_gen_max is not None:
+                    participation.token_gen_max = token_gen_max
+                if token_min_interval is not None:
+                    participation.token_min_interval = datetime.timedelta(seconds=token_min_interval)
+
+                session.commit()
+                logger.info("Participation updated.")
+                return True
+        else:
+            logger.error("A participation for this user in this contest "
+                         "already exists.")
+            return False
 
     logger.info("Participation added.")
     return True
@@ -148,6 +195,20 @@ def main():
                         help="if the participation is hidden")
     parser.add_argument("--unrestricted", action="store_true",
                         help="if the participation is unrestricted")
+    parser.add_argument("--token-gen-initial", action="store", type=int,
+                        help="initial number of tokens (None = inherit from contest)")
+    parser.add_argument("--token-max-number", action="store", type=int,
+                        help="maximum total number of tokens (None = inherit from contest)")
+    parser.add_argument("--token-gen-number", action="store", type=int,
+                        help="number of tokens generated per period (None = inherit from contest)")
+    parser.add_argument("--token-gen-interval", action="store", type=int,
+                        help="token generation interval in seconds (None = inherit from contest)")
+    parser.add_argument("--token-gen-max", action="store", type=int,
+                        help="maximum tokens from generation (None = inherit from contest)")
+    parser.add_argument("--token-min-interval", action="store", type=int,
+                        help="minimum interval between token usage in seconds (None = inherit from contest)")
+    parser.add_argument("--update", action="store_true",
+                        help="update token settings if participation already exists")
     password_group = parser.add_mutually_exclusive_group()
     password_group.add_argument(
         "-p", "--plaintext-password", action="store", type=utf8_decoder,
@@ -211,7 +272,15 @@ def main():
         args.method or "plaintext",
         args.hashed_password is not None, args.team,
         args.hidden, args.unrestricted,
-        args.group)
+        args.group,
+        token_gen_initial=args.token_gen_initial,
+        token_max_number=args.token_max_number,
+        token_gen_number=args.token_gen_number,
+        token_gen_interval=args.token_gen_interval,
+        token_gen_max=args.token_gen_max,
+        token_min_interval=args.token_min_interval,
+        update=args.update,
+    )
     return 0 if success is True else 1
 
 
