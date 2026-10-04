@@ -50,7 +50,7 @@ success, skipped, failed = 0, 0, 0
 for user in data['users']:
     username = user['username']
 
-    cmd = ['cmsAddParticipation', '-c', args.contest_id, username]
+    cmd = ['cmsAddParticipation', '-c', str(args.contest_id), username]
 
     # If user has bonus tokens, add --update and --token-gen-initial
     if username in bonus_map:
