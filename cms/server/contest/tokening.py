@@ -141,6 +141,12 @@ def _tokens_available(
 
     # Simulate!
     for next_token_timestamp in history:
+        # For unrestricted participations, tokens may be used before start.
+        # We still deduct them but skip generation calculation to avoid assertion failures.
+        if next_token_timestamp < start:
+            avail -= 1
+            continue
+
         # Increment the number of tokens because of generation.
         assert prev_token_timestamp <= next_token_timestamp
         avail += generate_tokens(prev_token_timestamp, next_token_timestamp)
