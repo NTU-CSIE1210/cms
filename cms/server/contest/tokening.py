@@ -158,10 +158,13 @@ def _tokens_available(
 
         prev_token_timestamp = next_token_timestamp
 
-    assert prev_token_timestamp <= timestamp
-    avail += generate_tokens(prev_token_timestamp, timestamp)
-    if gen_max is not None:
-        avail = min(avail, gen_max)
+    # For unrestricted participations, timestamp may be before start.
+    # In this case, no tokens have been generated yet.
+    if timestamp >= start:
+        assert prev_token_timestamp <= timestamp
+        avail += generate_tokens(prev_token_timestamp, timestamp)
+        if gen_max is not None:
+            avail = min(avail, gen_max)
 
     # Compute the time at which the next token will be generated.
     next_gen_time = None
