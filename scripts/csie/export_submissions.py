@@ -21,8 +21,8 @@ with SessionGen() as session:
 
     data = []
     for participation in contest.participations:
-        # Skip hidden participations (e.g., admin test accounts)
-        if participation.hidden:
+        # Skip hidden or unrestricted participations (e.g., admin test accounts)
+        if participation.hidden or participation.unrestricted:
             continue
 
         username = participation.user.username
