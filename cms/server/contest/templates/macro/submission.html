@@ -1,4 +1,4 @@
-{% macro rows(url, static_url, contest_url, translation, xsrf_form_html,
+{% macro rows(url, static_url, contest_url, translation, timezone, xsrf_form_html,
               actual_phase, task, submissions,
               can_use_tokens, can_play_token, can_play_token_now,
               tokens_info,
@@ -95,6 +95,7 @@ official (boolean): whether to display only the official (true) or unofficial
                     static_url,
                     contest_url,
                     translation,
+                    timezone,
                     xsrf_form_html,
                     actual_phase,
                     s,
@@ -112,7 +113,7 @@ official (boolean): whether to display only the official (true) or unofficial
 </table>
 {%- endmacro %}
 
-{% macro row(url, static_url, contest_url, translation, xsrf_form_html,
+{% macro row(url, static_url, contest_url, translation, timezone, xsrf_form_html,
              actual_phase, s, opaque_id, show_date,
              can_use_tokens, can_play_token, can_play_token_now,
              tokens_info,
@@ -145,9 +146,9 @@ submissions_download_allowed (bool): whether to allow users to download
 {% set status = sr.get_status() if sr is defined else SubmissionResult.COMPILING  %}
 <tr data-submission="{{ opaque_id }}" data-status="{{ status }}">
 {% if show_date %}
-    <td class="datetime">{{ s.timestamp|format_datetime }}</td>
+    <td class="datetime">{{ translation.format_datetime(s.timestamp, timezone) }}</td>
 {% else %}
-    <td class="time">{{ s.timestamp|format_time }}</td>
+    <td class="time">{{ translation.format_time(s.timestamp, timezone) }}</td>
 {% endif %}
     <td class="status">
 {% if status == SubmissionResult.COMPILING %}
