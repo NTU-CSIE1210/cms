@@ -173,7 +173,14 @@ class TaskSubmissionsHandler(ContestHandler):
         if submissions_left is not None:
             submissions_left = max(0, submissions_left)
 
-        tokens_info = tokens_available(participation, task, self.timestamp)
+        # For token calculation: use contest end time if after phase 0,
+        # to show the token state at the end of the contest
+        token_timestamp = self.timestamp
+        if self.r_params["actual_phase"] > 0 and \
+                self.r_params.get("valid_phase_end") is not None:
+            token_timestamp = self.r_params["valid_phase_end"]
+
+        tokens_info = tokens_available(participation, task, token_timestamp)
 
         download_allowed = self.contest.submissions_download_allowed
         self.render("task_submissions.html",
