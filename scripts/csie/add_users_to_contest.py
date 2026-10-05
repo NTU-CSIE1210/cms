@@ -38,7 +38,7 @@ if args.bonus_tokens:
             sys.exit(1)
 
         for row in reader:
-            username = row['id'].strip()
+            username = row['id'].strip().lower()
             bonus_map[username] = int(row[bonus_col])
 
     print(f"Loaded bonus tokens for {len(bonus_map)} users (base={args.base_tokens}, bonus column='{bonus_col}')")
