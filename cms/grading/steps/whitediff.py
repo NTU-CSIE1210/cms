@@ -120,8 +120,11 @@ def _white_diff(output: typing.BinaryIO, res: typing.BinaryIO) -> tuple[bool, st
                     lout = lout[:LENGTH_LIMIT] + b"..."
                 if len(lres) > LENGTH_LIMIT:
                     lres = lres[:LENGTH_LIMIT] + b"..."
-                lout = lout.decode("utf-8", errors='backslashreplace')
-                lres = lres.decode("utf-8", errors='backslashreplace')
+                # NUL is valid UTF-8 (U+0000), so decode() lets it through
+                # unescaped; strip it here since Postgres text columns can't
+                # store it, which would otherwise crash the DB write.
+                lout = lout.replace(b"\x00", b"").decode("utf-8", errors='backslashreplace')
+                lres = lres.replace(b"\x00", b"").decode("utf-8", errors='backslashreplace')
                 return False, f"Expected `{lres}`, found `{lout}` on line {line}"
 
 
