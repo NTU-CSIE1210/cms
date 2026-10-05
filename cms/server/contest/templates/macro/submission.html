@@ -51,7 +51,7 @@ official (boolean): whether to display only the official (true) or unofficial
         <col class="files"/>
     {% set num_cols = num_cols + 1 %}
 {% endif %}
-{% if can_use_tokens and actual_phase == 0 %}
+{% if can_use_tokens %}
         <col class="token"/>
     {% set num_cols = num_cols + 1 %}
 {% endif %}
@@ -75,7 +75,7 @@ official (boolean): whether to display only the official (true) or unofficial
 {% if submissions_download_allowed %}
             <th class="files">{% trans %}Files{% endtrans %}</th>
 {% endif %}
-{% if can_use_tokens and actual_phase == 0 %}
+{% if can_use_tokens %}
             <th class="token">{% trans %}Token{% endtrans %}</th>
 {% endif %}
         </tr>
@@ -232,11 +232,11 @@ submissions_download_allowed (bool): whether to allow users to download
         {% endif %}
     </td>
 {% endif %}
-{% if can_use_tokens and actual_phase == 0 %}
+{% if can_use_tokens %}
     <td class="token">
         {% if s.token is not none %}
-        <a class="btn disabled">{% trans %}Played{% endtrans %}</a>
-        {% else %}
+        <a class="btn disabled">{% trans %}Played{% endtrans %} {{ translation.format_time(s.token.timestamp, timezone) }}</a>
+        {% elif actual_phase == 0 %}
             {% if can_play_token_now %}
               {# Can play a token right now: show the button. #}
         <form action="{{ contest_url("tasks", task.name, "submissions", opaque_id, "token") }}" method="POST">
@@ -252,6 +252,8 @@ submissions_download_allowed (bool): whether to allow users to download
                  generated: tell the user there are no tokens. #}
         <a class="btn disabled">{% trans %}No tokens{% endtrans %}</a>
             {% endif %}
+        {% else %}
+        <a class="btn disabled">-</a>
         {% endif %}
     </td>
 {% endif %}
