@@ -7,7 +7,7 @@ gevent.monkey.patch_all()
 import argparse
 import csv
 
-from cms.db import SessionGen, Contest, Submission, Token
+from cms.db import SessionGen, Contest, Token
 
 parser = argparse.ArgumentParser(description="Export submission and token usage data")
 parser.add_argument("contest_id", type=int, help="Contest ID")

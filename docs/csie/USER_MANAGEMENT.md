@@ -39,6 +39,16 @@ cp contest.yaml ~/students/
 cmsImportUser -A ~/students/
 ```
 
+### 3. 重設密碼（選用）
+
+若要批量更新所有學生密碼，重新執行上述「產生帳密」流程，並在 `cmsImportUser` 加上 `--update-password` 參數：
+
+```bash
+cmsImportUser -A --update-password ~/students/
+```
+
+已存在的使用者會更新密碼，新使用者則會被建立。
+
 ## 每次新考試加入學生
 
 建立新比賽後，在遠端伺服器上以 cmsuser 身份執行：
@@ -76,64 +86,12 @@ b12345679,3
 - CSV 中沒有的學生：已在比賽中會跳過，不在比賽中會新增
 - 不使用 `--bonus-tokens` 時：所有已在比賽中的學生都會被跳過
 
-## 匯出 token 使用統計
-
-比賽結束後，如果想統計學生使用了多少額外 token，可使用：
-
-```bash
-python3 /srv/cms-src/scripts/csie/export_token_usage.py <contest_id> \
-    ~/students/contest.yaml \
-    --base-tokens 10 \
-    --output token_usage.csv
-```
-
-輸出 CSV 格式：
-```csv
-id,bonus_tokens_used
-b12345678,3
-b12345679,0
-```
-
-統計邏輯：`bonus_tokens_used = max(0, 實際使用總數 - base_tokens)`
-
-## 匯出 submission 資料
-
-比賽結束後，如果想分析學生的 submission 和 token 使用習慣，可使用：
-
-```bash
-python3 /srv/cms-src/scripts/csie/export_submissions.py <contest_id> \
-    --output submissions.csv
-```
-
-此腳本會匯出所有 official submission 的詳細資料：
-```csv
-submission_id,username,task_name,submission_timestamp,used_token,token_timestamp
-123,b12345678,task1,2026-10-05T01:23:45,True,2026-10-05T01:23:50
-124,b12345679,task2,2026-10-05T01:25:00,False,
-```
-
-注意：
-- 只包含非 hidden、非 unrestricted participation 的學生
-- 只包含 official submissions（不含 analysis mode 的提交）
-
 ## 腳本位置
 
 | 腳本 | 路徑 |
 |------|------|
 | 產生帳密 | `/srv/cms-src/scripts/csie/generate_users.py` |
 | 加入比賽 | `/srv/cms-src/scripts/csie/add_users_to_contest.py` |
-| 匯出 token 統計 | `/srv/cms-src/scripts/csie/export_token_usage.py` |
-| 匯出 submission 資料 | `/srv/cms-src/scripts/csie/export_submissions.py` |
-
-## 重設密碼
-
-若要批量更新所有學生密碼，重新執行上述「初次匯入」流程，並在 `cmsImportUser` 加上 `--update-password` 參數：
-
-```bash
-cmsImportUser -A --update-password ~/students/
-```
-
-已存在的使用者會更新密碼，新使用者則會被建立。
 
 ## 其他說明
 
