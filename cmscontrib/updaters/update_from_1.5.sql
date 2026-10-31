@@ -133,4 +133,18 @@ WHERE user_test_managers.user_test_id IN (
 )
 AND user_test_managers.filename LIKE 'stub.%';
 
+-- Per-participation token overrides
+ALTER TABLE participations ADD COLUMN token_max_number INTEGER;
+ALTER TABLE participations ADD COLUMN token_min_interval INTERVAL;
+ALTER TABLE participations ADD COLUMN token_gen_initial INTEGER;
+ALTER TABLE participations ADD COLUMN token_gen_number INTEGER;
+ALTER TABLE participations ADD COLUMN token_gen_interval INTERVAL;
+ALTER TABLE participations ADD COLUMN token_gen_max INTEGER;
+ALTER TABLE participations ADD CONSTRAINT participations_token_max_number_check CHECK ((token_max_number > 0));
+ALTER TABLE participations ADD CONSTRAINT participations_token_min_interval_check CHECK ((token_min_interval >= '00:00:00'::interval));
+ALTER TABLE participations ADD CONSTRAINT participations_token_gen_initial_check CHECK ((token_gen_initial >= 0));
+ALTER TABLE participations ADD CONSTRAINT participations_token_gen_number_check CHECK ((token_gen_number >= 0));
+ALTER TABLE participations ADD CONSTRAINT participations_token_gen_interval_check CHECK ((token_gen_interval > '00:00:00'::interval));
+ALTER TABLE participations ADD CONSTRAINT participations_token_gen_max_check CHECK ((token_gen_max > 0));
+
 COMMIT;
