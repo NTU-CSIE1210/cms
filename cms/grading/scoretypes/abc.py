@@ -388,12 +388,11 @@ class ScoreTypeGroup(ScoreTypeAlone):
 
         filtered_subtasks = []
         for st in score_details:
-            filtered_st = {
-                "idx": st["idx"],
-                "score_fraction": st["score_fraction"],
-                "score": st["score"],
-                "max_score": st["max_score"],
-            }
+            filtered_st = {"idx": st["idx"]}
+            if "score_fraction" in st:
+                filtered_st["score_fraction"] = st["score_fraction"]
+                filtered_st["score"] = st["score"]
+                filtered_st["max_score"] = st["max_score"]
 
             filtered_testcases = []
             for tc in st.get("testcases", []):
