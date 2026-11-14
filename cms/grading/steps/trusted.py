@@ -117,15 +117,16 @@ def extract_outcome_and_text(sandbox: Sandbox) -> tuple[float, list[str], str | 
             if not line:
                 continue
 
-            PREFIX = "ADMIN_MESSAGE:"
+            PREFIX = "ADMIN_WARNING:"
             if line.startswith(PREFIX):
                 line = _sanitize_message(line[len(PREFIX):].strip())
-                if admin_text is not None:
-                    admin_text = admin_text + " " + line
-                else:
-                    admin_text = line
+                logger.warning(f"Manager flagged a problem: `{line}`")
             else:
-                logger.warning(f"Unknown special manager command `{line}`")
+                line = _sanitize_message(line)
+            if admin_text is not None:
+                admin_text = admin_text + " " + line
+            else:
+                admin_text = line
 
     try:
         outcome = float(outcome)

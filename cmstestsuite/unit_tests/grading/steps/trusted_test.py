@@ -57,7 +57,15 @@ class TestExtractOutcomeAndText(unittest.TestCase):
         outcome, text, admin_text = extract_outcome_and_text(self.sandbox)
         self.assertEqual(outcome, 0.45)
         self.assertEqual(text, ["Text to return."])
-        self.assertEqual(admin_text, "admin")
+        self.assertEqual(admin_text, "ADMIN_MESSAGE: admin")
+
+    def test_admin_warning(self):
+        self.sandbox.fake_file("o", b"0.45\n")
+        self.sandbox.fake_file("e", b"Text to return.\nADMIN_WARNING: uh oh")
+        outcome, text, admin_text = extract_outcome_and_text(self.sandbox)
+        self.assertEqual(outcome, 0.45)
+        self.assertEqual(text, ["Text to return."])
+        self.assertEqual(admin_text, "uh oh")
 
     def test_following_lines_ignored(self):
         self.sandbox.fake_file("o", b"0.45\nNothing\n")
