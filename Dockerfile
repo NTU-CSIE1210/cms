@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         libyaml-dev
         mono-mcs
         php-cli
-        postgresql-client-15
+        postgresql-client
         pypy3
         python3
         python3-dev
