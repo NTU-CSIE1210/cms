@@ -6,7 +6,7 @@
 </div>
 <form enctype="multipart/form-data" action="{{ url("task", task.id, "statements", "add") }}" method="POST">
   {{ xsrf_form_html|safe }}
-  Language code: <input type="text" name="language"/><br/>
+  Language code: <input type="text" name="language" value="en"/><br/>
   <input type="file" name="statement"/><br/>
   <input type="submit" value="Upload">
   <input type="Reset" >

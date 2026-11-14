@@ -138,7 +138,7 @@ class Task(Base):
         Enum(TOKEN_MODE_DISABLED, TOKEN_MODE_FINITE, TOKEN_MODE_INFINITE,
              name="token_mode"),
         nullable=False,
-        default=TOKEN_MODE_DISABLED)
+        default=TOKEN_MODE_INFINITE)
 
     # The maximum number of tokens a contestant is allowed to use
     # during the whole contest (on this tasks).
@@ -217,7 +217,7 @@ class Task(Base):
         Integer,
         CheckConstraint("score_precision >= 0"),
         nullable=False,
-        default=0)
+        default=2)
 
     # Score mode for the task.
     score_mode: str = Column(

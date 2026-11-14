@@ -87,7 +87,7 @@ $("select[name=task_type_{{ dataset.id }}]").change(function() {
                 <td><a href="{{ url("file", statement.digest, "statement.pdf") }}">Statement for language "{{ statement.language }}"</a></td>
                 <td>
                   <label>
-                    <input type="checkbox" name="primary_statement_{{ statement.language }}" {% if statement.language in primary_statements %}checked{% endif %} />
+                    <input type="checkbox" name="primary_statement_{{ statement.language }}" {% if statement.language in primary_statements or not primary_statements %}checked{% endif %} />
                     Primary?
                   </label>
                 </td>

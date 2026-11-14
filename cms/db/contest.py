@@ -238,7 +238,7 @@ class Contest(Base):
         Integer,
         CheckConstraint("score_precision >= 0"),
         nullable=False,
-        default=0)
+        default=2)
 
     # Main group (id and Group object) of this contest
     main_group_id: int | None = Column(
