@@ -14,6 +14,20 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     # also deletes .deb files after successful install.
     apt-get update
     apt-get upgrade -y
+
+    # noble and bookworm ship different default postgresql-client major
+    # versions, which makes pg_dump emit spurious extra statements when
+    # talking to the postgres:15 server in docker-compose.test.yml. Add the
+    # PGDG repo so we can pin postgresql-client-15 on both.
+    apt-get install -y curl ca-certificates gnupg
+    install -d /usr/share/postgresql-common/pgdg
+    curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail \
+        https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    . /etc/os-release
+    echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" \
+        > /etc/apt/sources.list.d/pgdg.list
+    apt-get update
+
     PACKAGES=(
         build-essential
         cppreference-doc-en-html
@@ -28,7 +42,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         libyaml-dev
         mono-mcs
         php-cli
-        postgresql-client
+        postgresql-client-15
         pypy3
         python3
         python3-dev
